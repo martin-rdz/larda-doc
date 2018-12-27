@@ -1,0 +1,1100 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SpectraProcessing &mdash; pyLARDA  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API documentation" href="api_overview.html" />
+    <link rel="prev" title="peakTree extension" href="peakTree.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> pyLARDA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to use larda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datacontainer_and_transformation.html">Data container and transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide_config.html">Guide to config-files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup_remote.html">Setup remote date source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="peakTree.html">peakTree extension</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SpectraProcessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_overview.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyLARDA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>SpectraProcessing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/spectra.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pyLARDA.SpectraProcessing">
+<span id="spectraprocessing"></span><h1>SpectraProcessing<a class="headerlink" href="#module-pyLARDA.SpectraProcessing" title="Permalink to this headline">¶</a></h1>
+<p>This routine calculates the radar moments for the RPG 94 GHz FMCW radar ‘LIMRAD94’ and generates a NetCDF4 file.
+The generated files can be used as input for the Cloudnet processing chain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param **date</dt>
+<dd class="field-odd"><p>format YYYYMMDD</p>
+</dd>
+<dt class="field-even">type **date</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+<dt class="field-odd">param **path</dt>
+<dd class="field-odd"><p>path where NetCDF file will be stored</p>
+</dd>
+<dt class="field-even">type **path</dt>
+<dd class="field-even"><p>string</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">spec2mom_limrad94</span><span class="o">.</span><span class="n">py</span> <span class="n">date</span><span class="o">=</span><span class="mi">20181201</span> <span class="n">path</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">pycharm_project_626</span><span class="o">/</span><span class="n">scripts_Willi</span><span class="o">/</span><span class="n">cloudnet_input</span><span class="o">/</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.replace_fill_value">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">replace_fill_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">newfill</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#replace_fill_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.replace_fill_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replaces the fill value of an spectrum container by their time and range specific mean noise level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.array</em>) – 3D spectrum array (time, range, velocity)</p></li>
+<li><p><strong>newfill</strong> (<em>numpy.array</em>) – 2D new fill values for 3rd dimension (velocity)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spectrum with mean noise</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>var (numpy.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.estimate_noise_hs74">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">estimate_noise_hs74</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spectrum</span></em>, <em class="sig-param"><span class="n">navg</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">std_div</span><span class="o">=</span><span class="default_value">6.0</span></em>, <em class="sig-param"><span class="n">nnoise_min</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#estimate_noise_hs74"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.estimate_noise_hs74" title="Permalink to this definition">¶</a></dt>
+<dd><p>REFERENCE TO ARM PYART GITHUB REPO: <a class="reference external" href="https://github.com/ARM-DOE/pyart/blob/master/pyart/util/hildebrand_sekhon.py">https://github.com/ARM-DOE/pyart/blob/master/pyart/util/hildebrand_sekhon.py</a></p>
+<p>Estimate noise parameters of a Doppler spectrum.
+Use the method of estimating the noise level in Doppler spectra outlined
+by Hildebrand and Sehkon, 1974.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spectrum</strong> (<em>array</em>) – Doppler spectrum in linear units.</p></li>
+<li><p><strong>navg</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of spectral bins over which a moving average
+has been taken. Corresponds to the <strong>p</strong> variable from equation 9 of the article.
+The default value of 1 is appropriate when no moving average has been applied to the spectrum.</p></li>
+<li><p><strong>std_div</strong> (<em>float</em><em>, </em><em>optional</em>) – Number of standard deviations above mean noise floor to specify the
+signal threshold, default: threshold=mean_noise + 6*std(mean_noise)</p></li>
+<li><p><strong>nnoise_min</strong> (<em>int</em><em>, </em><em>optional</em>) – Minimum number of noise samples to consider the estimation valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>tuple with</p>
+<ul class="simple">
+<li><p><strong>mean</strong> (<em>float</em>): Mean of points in the spectrum identified as noise.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>): Threshold separating noise from signal. The point in the spectrum with
+this value or below should be considered as noise, above this value
+signal. It is possible that all points in the spectrum are identified
+as noise. If a peak is required for moment calculation then the point
+with this value should be considered as signal.</p></li>
+<li><p><strong>var</strong> (<em>float</em>): Variance of the points in the spectrum identified as noise.</p></li>
+<li><p><strong>nnoise</strong> (<em>int</em>): Number of noise points in the spectrum.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>P. H. Hildebrand and R. S. Sekhon, Objective Determination of the Noise
+Level in Doppler Spectra. Journal of Applied Meteorology, 1974, 13, 808-811.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.find_peak_edges">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">find_peak_edges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">signal</span></em>, <em class="sig-param"><span class="n">threshold</span><span class="o">=</span><span class="default_value">- 1</span></em>, <em class="sig-param"><span class="n">imaxima</span><span class="o">=</span><span class="default_value">- 1</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#find_peak_edges"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.find_peak_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the indices of left and right edge of the main signal peak in a Doppler spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>numpy.array</em>) – 1D array Doppler spectra</p></li>
+<li><p><strong>threshold</strong> – noise threshold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>indices of signal minimum/maximum velocity</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[index_left, index_right] (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.radar_moment_calculation">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">radar_moment_calculation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">signal</span></em>, <em class="sig-param"><span class="n">vel_bins</span></em>, <em class="sig-param"><span class="n">DoppRes</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#radar_moment_calculation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.radar_moment_calculation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculation of radar moments: reflectivity, mean Doppler velocity, spectral width,
+skewness, and kurtosis of one Doppler spectrum. Optimized for the use of Numba.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Divide the signal_sum by 2 because vertical and horizontal channel are added.
+Subtract half of of the Doppler resolution from mean Doppler velocity, because</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>-</em>) – detected signal from a Doppler spectrum</p></li>
+<li><p><strong>vel_bins</strong> (<em>-</em>) – extracted velocity bins of the signal (same length as signal)</p></li>
+<li><p><strong>DoppRes</strong> (<em>-</em>) – resolution of the Doppler spectra (different for each chirp)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>dict containing</p>
+<ul class="simple">
+<li><p><strong>Ze_lin</strong> (<em>float array</em>): reflectivity (0.Mom) over range of velocity bins [mm6/m3]</p></li>
+<li><p><strong>VEL</strong> (<em>float array</em>): mean velocity (1.Mom) over range of velocity bins [m/s]</p></li>
+<li><p><strong>sw</strong> (<em>float array</em>): spectrum width (2.Mom) over range of velocity bins [m/s]</p></li>
+<li><p><strong>skew</strong> (<em>float array</em>): skewness (3.Mom) over range of velocity bins</p></li>
+<li><p><strong>kurt</strong> (<em>float array</em>): kurtosis (4.Mom) over range of velocity bins</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.despeckle">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">despeckle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mask</span></em>, <em class="sig-param"><span class="n">min_percentage</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#despeckle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.despeckle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove small patches (speckle) from any given mask by checking 5x5 box
+around each pixel, more than half of the points in the box need to be 1
+to keep the 1 at current pixel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mask</strong> (<em>numpy.array</em><em>, </em><em>integer</em>) – 2D mask where 1 = an invalid/fill value and 0 = a data point (time, height)</p></li>
+<li><p><strong>min_percentage</strong> (<em>float</em>) – minimum percentage of neighbours that need to be signal above noise</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mask … speckle-filtered matrix of 0 and 1 that represents (cloud) mask [height x time]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.make_container_from_spectra">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">make_container_from_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spectra_all_chirps</span></em>, <em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">paraminfo</span></em>, <em class="sig-param"><span class="n">invalid_mask</span></em>, <em class="sig-param"><span class="n">varname</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#make_container_from_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.make_container_from_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine will generate a larda container from calculated moments from spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spectra_all_chirps</strong> (<em>list of dicts</em>) – dimension [nchirps], containing the spectrum
+values of the 94 GHz RPG cloud radar</p></li>
+<li><p><strong>values</strong> (<em>numpy array</em>) – dimension [nrange, ntimes], values of calculated moments</p></li>
+<li><p><strong>paraminfo</strong> (<em>dict</em>) – information from params_[campaign].toml for the specific variable</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>larda data container</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>container (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.load_spectra_rpgfmcw94">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">load_spectra_rpgfmcw94</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">larda</span></em>, <em class="sig-param"><span class="n">time_span</span></em>, <em class="sig-param"><span class="n">rpg_radar</span><span class="o">=</span><span class="default_value">'LIMRAD94'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#load_spectra_rpgfmcw94"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.load_spectra_rpgfmcw94" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine will generate a list of larda containers including spectra of the RPG-FMCW 94GHz radar.
+The list-container at return will contain the additional information, for each chirp.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rpg_radar</strong> (<em>string</em>) – name of the radar system as defined in the toml file</p></li>
+<li><p><strong>larda</strong> (<em>class larda</em>) – Initialized pyLARDA, already connected to a specific campaign</p></li>
+<li><p><strong>time_span</strong> (<em>list</em>) – Starting and ending time point in datetime format.</p></li>
+<li><p><strong>**noise_factor</strong> (<em>float</em>) – Noise factor, number of standard deviations from mean noise floor</p></li>
+<li><p><strong>**ghost_echo_1</strong> (<em>bool</em>) – Filters ghost echos which occur over all chirps during precipitation.</p></li>
+<li><p><strong>**ghost_echo_2</strong> (<em>bool</em>) – Filters ghost echos which occur over 1 chirps during precipitation.</p></li>
+<li><p><strong>**estimate_noise</strong> (<em>boal</em>) – <p>If True, adds the following noise estimation values to the container:</p>
+<ul>
+<li><p>mean (2d ndarray): Mean noise level of the spectra.</p></li>
+<li><p>threshold (2d ndarray): Noise threshold, values above this threshold are consider as signal.</p></li>
+<li><p>variance (2d ndarray): The variance of the mean noise level.</p></li>
+<li><p>numnoise (2d ndarray): Number of Pixels that are cconsideras noise.</p></li>
+<li><p>signal (2d ndarray): Boolean array, a value is True if no signal was detected.</p></li>
+<li><p>bounds (3d ndarrax): Dimensions [n_time, n_range, 2] containing the integration boundaries.</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>list of larda data container</p>
+<ul class="simple">
+<li><p><strong>spec[i_chirps][‘no_av’]</strong> (<em>float</em>): Number of spectral averages divided by the number of FFT points</p></li>
+<li><p><strong>spec[i_chirps][‘DoppRes’]</strong> (<em>float</em>): Doppler resolution for</p></li>
+<li><p><strong>spec[i_chirps][‘SL’]</strong> (<em>2D-float</em>): Sensitivity limit (dimensions: time, range)</p></li>
+<li><p><strong>spec[i_chirps][‘NF’]</strong> (<em>string</em>): Noise factor, default = 6.0</p></li>
+<li><p><strong>spec[i_chirps][‘rg_offsets’]</strong> (<em>list</em>): Indices, where chipr shifts</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>container (list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.dealiasing_check">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">dealiasing_check</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">masked3D</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#dealiasing_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.dealiasing_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for folding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>masked3D</strong> (<em>numpy.array</em>) – 3D (time, range, velocity)</p></li>
+<li><p><strong>vel</strong> (<em>list</em>) – contains 1D numpy.arrays for each chirp</p></li>
+<li><p><strong>mean_noise</strong> (<em>numpy.array</em>) – </p></li>
+<li><p><strong>rg_offsets</strong> (<em>numpy.array</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>alias_flag (numpy.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.dealiasing">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">dealiasing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">spectra</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">vel_bins_per_chirp</span><span class="p">:</span> <span class="n">List<span class="p">[</span>numpy.array<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">noisefloor</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">rg_offsets</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_triple</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vel_offsets</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>List<span class="p">[</span>int<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">jump</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>int<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>numpy.array<span class="p">, </span>List<span class="p">[</span>numpy.array<span class="p">]</span><span class="p">]</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#dealiasing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.dealiasing" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Peaks exceeding the maximum unambiguous Doppler velocity range of ± v_Nyq in [m s-1]
+appear at the next upper (lower) range gate at the other end of the velocity spectrum.
+The dealiasing method presented here aims to correct for this and is applied to every time step.</p>
+<p>Logging level INFO shows the de-aliasing progress bar.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>spectra</strong> – dim = (n_time, n_range, n_velocity) in linear units!</p></li>
+<li><p><strong>vel_bins_per_chirp</strong> – len = (n_chirp), each list element contains a numpy array of velocity bins</p></li>
+<li><p><strong>noisefloor</strong> – dim = (n_time, n_range) in linear units!</p></li>
+<li><p><strong>rg_offsets</strong> (<em>optional</em>) – dim = (n_chirp + 1), starting with 0, range indices where chirp shift occurs</p></li>
+<li><p><strong>show_triple</strong> (<em>optional</em>) – if True, return dealiased spectra including the triplication</p></li>
+<li><p><strong>vel_offsets</strong> (<em>optional</em>) – velocity window around the main peak [x1, x2], x1 &lt; 0, x2 &gt; 0 ! in [m s-1], default [-6.0, +9.0]</p></li>
+<li><p><strong>jump</strong> (<em>optional</em>) – maximum number of Doppler bins a spectrum can change in two adjacent range bins</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>tuple containing</p>
+<ul class="simple">
+<li><p><strong>dealiased_spectra</strong>: dim = (n_time, n_range, 3 * n_velocity), de-aliased Doppler spectrum</p></li>
+<li><p><strong>dealiased_mask</strong>: dim = (n_time, n_range, 3 * n_velocity), True if no signal</p></li>
+<li><p><strong>velocity_new</strong>: len = (n_chirp), each list element contains a numpy array of velocity bins for the respective chirp of ± 3*v_Nyq in [m s-1]</p></li>
+<li><p><strong>signal_boundaries</strong>: indices of left and right edge of a signal, [-1, -1] if no signal</p></li>
+<li><p><strong>search_path</strong>: indices of left and right edge of the search path, [-1, -1] if no signal</p></li>
+<li><p><strong>idx_peak_matrix</strong>: indices of the main peaks, [NDbins / 2] if no signal</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<ul class="simple">
+<li><p>add time–height mask for dealiasing</p></li>
+<li><p>search window relative to [m s-1]</p></li>
+<li><p>abs(idx_new_peak - mean_idx_last_ts) &gt; 120: –&gt; relativ</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.noise_estimation_uncompressed_data">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">noise_estimation_uncompressed_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">n_std</span><span class="o">=</span><span class="default_value">6.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#noise_estimation_uncompressed_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.noise_estimation_uncompressed_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dict containing the noise threshold, mean noise level,
+the variance of the noise, the number of noise values in the spectrum,
+and the boundaries of the main signal peak, if there is one</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – data container, containing data[‘var’] of dimension (n_ts, n_range, n_Doppler_bins)</p></li>
+<li><p><strong>**n_std_deviations</strong> (<em>float</em>) – threshold = number of standard deviations
+above mean noise floor, default: threshold is the value of the first
+non-noise value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dict with noise floor estimation for all time and range points</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.mira_noise_calculation">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">mira_noise_calculation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radar_const</span></em>, <em class="sig-param"><span class="n">SNRCorFaCo</span></em>, <em class="sig-param"><span class="n">HSDco</span></em>, <em class="sig-param"><span class="n">noise_power_co</span></em>, <em class="sig-param"><span class="n">range_ka</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#mira_noise_calculation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.mira_noise_calculation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radar_const</strong> – </p></li>
+<li><p><strong>SNRCorFaCo</strong> – </p></li>
+<li><p><strong>HSDco</strong> – </p></li>
+<li><p><strong>noise_power_co</strong> – </p></li>
+<li><p><strong>range_ka</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>noise level in linear units</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.despeckle2D">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">despeckle2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">min_perc</span><span class="o">=</span><span class="default_value">80.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#despeckle2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.despeckle2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to remove all spectral lines for one time-range-pixel if surrounding% of the sourounding pixels are fill_values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>numpy.array</em>) – cloud radar Doppler spectra, dimensions: (time, range, velocity), unit: [mm6 mm-3 m s-1]</p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>min_perc</strong> (<em>float</em>) – minimum percentage value of neighbouring pixel, that need to be above the noise threshold</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>where True = fill_value, and False = signal, dimensions: (time, range, velocity)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>mask (numpy.array, bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.filter_ghost_1">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">filter_ghost_1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">rg</span></em>, <em class="sig-param"><span class="n">vel</span></em>, <em class="sig-param"><span class="n">offset</span></em>, <em class="sig-param"><span class="n">dBZ_thresh</span><span class="o">=</span><span class="default_value">- 20.0</span></em>, <em class="sig-param"><span class="n">reduce_by</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#filter_ghost_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.filter_ghost_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to remove certain spectral lines “speckle ghost echoes” from all chirps of RPG FMCW 94GHz cloud radar spectra.
+The speckle occur usually near the maximum unambiguous Doppler velocity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.array</em>) – cloud radar Doppler spectra, dimensions: (time, range, velocity), unit: [mm6 mm-3 m s-1]</p></li>
+<li><p><strong>rg</strong> (<em>numpy.array</em>) – range values, unit [m]</p></li>
+<li><p><strong>vel</strong> (<em>list of numpy.arrays</em>) – contains the Doppler velocity values for each chirp, dimension = n_chirps</p></li>
+<li><p><strong>offset</strong> (<em>list</em><em>, </em><em>integer</em>) – range indices where the chirp changes takes place, dimension = n_chirps + 1 (starting with 0)</p></li>
+<li><p><strong>dBZ_thresh</strong> (<em>float</em>) – values below will be considered as ghost echo</p></li>
+<li><p><strong>reduce_by</strong> (<em>float</em>) – reduce the maximum unambiguous Doppler velocity by this amount in [m s-1]</p></li>
+<li><p><strong>**ignore_chirp1</strong> (<em>bool</em>) – Don’t filter ghost echos of this type for first chirp (set to True if not given)</p></li>
+<li><p><strong>**Z_thresh</strong> (<em>float</em>) – Ze in dBZ to be exceeded in lowest 500 m range for filter to be activated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>where True = fill_value, and False = signal, dimensions: (time, range, velocity)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mask (numpy.array, bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.filter_ghost_2">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">filter_ghost_2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">rg</span></em>, <em class="sig-param"><span class="n">SL</span></em>, <em class="sig-param"><span class="n">first_offset</span></em>, <em class="sig-param"><span class="n">dBZ_thresh</span><span class="o">=</span><span class="default_value">- 5.0</span></em>, <em class="sig-param"><span class="n">reduce_by</span><span class="o">=</span><span class="default_value">10.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#filter_ghost_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.filter_ghost_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is used to remove curtain-like ghost echoes
+from the first chirp of RPG FMCW 94GHz cloud radar spectra.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.array</em>) – cloud radar Doppler spectra, dimensions: (time, range, velocity), unit: [mm6 mm-3 m s-1]</p></li>
+<li><p><strong>rg</strong> (<em>numpy.array</em>) – range values, unit [m]</p></li>
+<li><p><strong>SL</strong> (<em>numpy.array</em>) – sensitivity limit, dimension: (time, range), unit: [mm6 mm-3]</p></li>
+<li><p><strong>first_offset</strong> (<em>integer</em>) – range index where the first chirp change takes place</p></li>
+<li><p><strong>dBZ_thresh</strong> (<em>float</em>) – minimum threshold in [dBZ], where ghost echos can be assumed</p></li>
+<li><p><strong>reduce_by</strong> (<em>float</em>) – reduce the sensitivity limit by this amount of [dBZ]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>where True = fill_value, and False = signal, dimensions: (time, range, velocity)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>mask (numpy.array, bool)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.spectra2moments">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">spectra2moments</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ZSpec</span></em>, <em class="sig-param"><span class="n">paraminfo</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#spectra2moments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.spectra2moments" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine calculates the radar moments: reflectivity, mean Doppler velocity, spectrum width, skewness and
+kurtosis from the level 0 spectrum files of the 94 GHz RPG cloud radar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ZSpec</strong> (<em>dict</em>) – list containing the dicts for each chrip of RPG-FMCW Doppler cloud radar</p></li>
+<li><p><strong>paraminfo</strong> (<em>dict</em>) – information from params_[campaign].toml for the system LIMRAD94</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of larda containers, including larda container for Ze, VEL, sw, skew, kurt</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>container_dict (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.heave_correction">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">heave_correction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">moments</span></em>, <em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">path_to_seapath</span><span class="o">=</span><span class="default_value">'/projekt2/remsens/data_new/site-campaign/rv_meteor-eurec4a/instruments/RV-METEOR_DSHIP'</span></em>, <em class="sig-param"><span class="n">mean_hr</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">only_heave</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cross_product</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transform_to_earth</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">add</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#heave_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.heave_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correct mean Doppler velocity for heave motion of ship (RV-Meteor)
+Calculate heave rate from seapath measurements and create heave correction array. If Doppler velocity is given as an
+input, correct it and return an array with the corrected Doppler velocities.
+Without Doppler Velocity input, only the heave correction array is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>moments</strong> – LIMRAD94 moments container as returned by spectra2moments in spec2mom_limrad94.py, C1/2/3_Range,
+SeqIntTime and Inc_ElA (for time (ts)) from LV1 file</p></li>
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – object with date of current file</p></li>
+<li><p><strong>path_to_seapath</strong> (<em>string</em>) – path where seapath measurement files (daily dat files) are stored</p></li>
+<li><p><strong>mean_hr</strong> (<em>bool</em>) – whether to use the mean heave rate over the SeqIntTime or the heave rate at the start time of the chirp</p></li>
+<li><p><strong>only_heave</strong> (<em>bool</em>) – whether to use only heave to calculate the heave rate or include pitch and roll induced heave</p></li>
+<li><p><strong>use_cross_product</strong> (<em>bool</em>) – whether to use the cross product like Hannes Griesche <a class="reference external" href="https://doi.org/10.5194/amt-2019-434">https://doi.org/10.5194/amt-2019-434</a></p></li>
+<li><p><strong>transform_to_earth</strong> (<em>bool</em>) – transform cross product to earth coordinate system as
+described in <a class="reference external" href="https://repository.library.noaa.gov/view/noaa/17400">https://repository.library.noaa.gov/view/noaa/17400</a></p></li>
+<li><p><strong>add</strong> (<em>bool</em>) – whether to add the heave rate or subtract it</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A number of variables</p>
+<ul class="simple">
+<li><p><strong>new_vel</strong> (<em>ndarray</em>); corrected Doppler velocities, same shape as moments[“VEL”][“var”] or list if no Doppler
+Velocity is given;</p></li>
+<li><p><strong>heave_corr</strong> (<em>ndarray</em>): heave rate closest to each radar timestep for each height bin, same shape as
+moments[“VEL”][“var”];</p></li>
+<li><p><strong>seapath_out</strong> (<em>pd.DataFrame</em>): data frame with all heave information from the closest time steps to the chirps</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.heave_correction_spectra">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">heave_correction_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">path_to_seapath</span><span class="o">=</span><span class="default_value">'/projekt2/remsens/data_new/site-campaign/rv_meteor-eurec4a/instruments/RV-METEOR_DSHIP'</span></em>, <em class="sig-param"><span class="n">mean_hr</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">only_heave</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cross_product</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transform_to_earth</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">add</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#heave_correction_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.heave_correction_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift Doppler spectra to correct for heave motion of ship (RV-Meteor)
+Calculate heave rate from seapath measurements and create heave correction array. Translate the heave correction to
+a number spectra bins by which to move each spectra. If Spectra are given, shift them and return a 3D array with the
+shifted spectra.
+Without spectra input, only the heave correction array and the array with the number if bins to move is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – LIMRAD94 data container filled with spectra and C1/2/3_Range, SeqIntTime, MaxVel, DoppLen from LV1 file;
+for Claudia’s version the mean Doppler velocity is also needed</p></li>
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – object with date of current file</p></li>
+<li><p><strong>path_to_seapath</strong> (<em>string</em>) – path where seapath measurement files (daily dat files) are stored</p></li>
+<li><p><strong>mean_hr</strong> (<em>bool</em>) – whether to use the mean heave rate over the SeqIntTime or the heave rate at the start time of the chirp</p></li>
+<li><p><strong>only_heave</strong> (<em>bool</em>) – whether to use only heave to calculate the heave rate or include pitch and roll induced heave</p></li>
+<li><p><strong>use_cross_product</strong> (<em>bool</em>) – whether to use the cross product like Hannes Griesche <a class="reference external" href="https://doi.org/10.5194/amt-2019-434">https://doi.org/10.5194/amt-2019-434</a></p></li>
+<li><p><strong>transform_to_earth</strong> (<em>bool</em>) – transform cross product to earth coordinate system as described in <a class="reference external" href="https://repository.library.noaa.gov/view/noaa/17400">https://repository.library.noaa.gov/view/noaa/17400</a></p></li>
+<li><p><strong>add</strong> (<em>bool</em>) – whether to add the heave rate or subtract it</p></li>
+<li><p><strong>**kwargs</strong> – shift (int): number of time steps to shift seapath data
+version (str): which version to use, ‘ca’ or ‘jr’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>A number of variables</p>
+<ul class="simple">
+<li><p><strong>new_spectra</strong> (<em>ndarray</em>); corrected Doppler velocities, same shape as data[“VHSpec”][“var”] or list if no Doppler
+Spectra are given;</p></li>
+<li><p><strong>heave_corr</strong> (<em>ndarray</em>): heave rate closest to each radar timestep for each height bin, shape = (time x range);</p></li>
+<li><p><strong>seapath_out</strong> (<em>pd.DataFrame</em>): data frame with all heave information from the closest time steps to the chirps</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.read_seapath">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">read_seapath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">'/projekt2/remsens/data_new/site-campaign/rv_meteor-eurec4a/instruments/RV-METEOR_DSHIP'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#read_seapath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.read_seapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in daily Seapath measurements from RV Meteor from .dat files to a pandas.DataFrame
+:param date: object with date of current file
+:type date: datetime.datetime
+:param path: path to seapath files
+:type path: str
+:param kwargs for read_csv: output_format (str): whether a pandas data frame or a xarray dataset is returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame with Seapath measurements</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>seapath (DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.read_dship">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">read_dship</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#read_dship"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.read_dship" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in 1 Hz DSHIP data and return pandas DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>date</strong> (<em>str</em>) – yyyymmdd (eg. 20200210)</p></li>
+<li><p><strong>**kwargs</strong> – kwargs for pd.read_csv (not all implemented) <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html">https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame with 1 Hz DSHIP data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.f_shiftTimeDataset">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">f_shiftTimeDataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dataset</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#f_shiftTimeDataset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.f_shiftTimeDataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>author: Claudia Acquistapace
+date: 25 november 2020
+goal : function to shift time variable of the dataset to the central value of the time interval
+of the time step
+input:</p>
+<blockquote>
+<div><p>dataset: xarray dataset</p>
+</div></blockquote>
+<dl class="simple">
+<dt>output:</dt><dd><p>dataset: xarray dataset with the time coordinate shifted added to the coordinates and the variables now referring to the shifted time array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_heave_rate">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_heave_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seapath</span></em>, <em class="sig-param"><span class="n">x_radar</span><span class="o">=</span><span class="default_value">- 11</span></em>, <em class="sig-param"><span class="n">y_radar</span><span class="o">=</span><span class="default_value">4.07</span></em>, <em class="sig-param"><span class="n">z_radar</span><span class="o">=</span><span class="default_value">15.8</span></em>, <em class="sig-param"><span class="n">only_heave</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">use_cross_product</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">transform_to_earth</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_heave_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_heave_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate heave rate at a certain location of a ship with the measurements of the INS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seapath</strong> (<em>pd.DataFrame</em>) – Data frame with heading, roll, pitch and heave as columns</p></li>
+<li><p><strong>x_radar</strong> (<em>float</em>) – x position of location with respect to INS in meters</p></li>
+<li><p><strong>y_radar</strong> (<em>float</em>) – y position of location with respect to INS in meters</p></li>
+<li><p><strong>z_radar</strong> (<em>float</em>) – z position of location with respect to INS in meters</p></li>
+<li><p><strong>only_heave</strong> (<em>bool</em>) – whether to use only heave to calculate the heave rate or include pitch and roll induced heave</p></li>
+<li><p><strong>use_cross_product</strong> (<em>bool</em>) – whether to use the cross product like Hannes Griesche <a class="reference external" href="https://doi.org/10.5194/amt-2019-434">https://doi.org/10.5194/amt-2019-434</a></p></li>
+<li><p><strong>transform_to_earth</strong> (<em>bool</em>) – transform cross product to earth coordinate system as described in <a class="reference external" href="https://repository.library.noaa.gov/view/noaa/17400">https://repository.library.noaa.gov/view/noaa/17400</a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data frame as input with additional columns radar_heave, pitch_heave, roll_heave and
+“heave_rate”</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>seapath (pd.DataFrame)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.f_calcRMatrix">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">f_calcRMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rollShipArr</span></em>, <em class="sig-param"><span class="n">pitchShipArr</span></em>, <em class="sig-param"><span class="n">yawShipArr</span></em>, <em class="sig-param"><span class="n">NtimeShip</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#f_calcRMatrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.f_calcRMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>author: Claudia Acquistapace
+date : 27/10/2020
+goal: function to calculate R matrix given roll, pitch, yaw
+input:</p>
+<blockquote>
+<div><p>rollShipArr: roll array in degrees
+pitchShipArr: pitch array in degrees
+yawShipArr: yaw array in degrees
+NtimeShip: dimension of time array for the definition of R_inv as [3,3,dimTime]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>output:</dt><dd><p>R[3,3,Dimtime]: array of rotational matrices, one for each time stamp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_heave_rate_claudia">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_heave_rate_claudia</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">x_radar</span><span class="o">=</span><span class="default_value">- 11</span></em>, <em class="sig-param"><span class="n">y_radar</span><span class="o">=</span><span class="default_value">4.07</span></em>, <em class="sig-param"><span class="n">z_radar</span><span class="o">=</span><span class="default_value">- 15.8</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_heave_rate_claudia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_heave_rate_claudia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate heave rate at a certain location on a ship according to Claudia Acquistapace’s approach</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>xr.DataSet</em>) – Data Set with heading, roll, pitch and heave as columns</p></li>
+<li><p><strong>x_radar</strong> (<em>float</em>) – x position of location with respect to INS in meters</p></li>
+<li><p><strong>y_radar</strong> (<em>float</em>) – y position of location with respect to INS in meters</p></li>
+<li><p><strong>z_radar</strong> (<em>float</em>) – z position of location with respect to INS in meters</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns: xr.DataSet with additional variable heave_rate</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.find_mdv_time_series">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">find_mdv_time_series</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mdv_values</span></em>, <em class="sig-param"><span class="n">radar_time</span></em>, <em class="sig-param"><span class="n">n_ts_run</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#find_mdv_time_series"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.find_mdv_time_series" title="Permalink to this definition">¶</a></dt>
+<dd><p>author: Claudia Acquistapace, Johannes Roettenbacher
+Identify, given a mean doppler velocity matrix, a sequence of length n_ts_run of values in the matrix
+at a given height that contains the minimum possible amount of nan values in it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mdv_values</strong> (<em>ndarray</em>) – time x heigth matrix of Doppler Velocity</p></li>
+<li><p><strong>radar_time</strong> (<em>ndarray</em>) – corresponding radar time stamps in seconds (unix time)</p></li>
+<li><p><strong>n_ts_run</strong> (<em>int</em>) – number of timestamps needed in a mdv series</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>time series of Doppler velocity with length n_ts_run
+time_series (ndarray): corresponding time stamps to Doppler velocity time series
+i_height_sel (int): index of chosen height
+valuesColumnMean (ndarray): time series of mean Doppler velocity averaged over height with length n_ts_run</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>valuesTimeSerie (ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_time_shift">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_time_shift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">w_radar_meanCol</span></em>, <em class="sig-param"><span class="n">delta_t_min</span></em>, <em class="sig-param"><span class="n">delta_t_max</span></em>, <em class="sig-param"><span class="n">resolution</span></em>, <em class="sig-param"><span class="n">w_ship_chirp</span></em>, <em class="sig-param"><span class="n">timeSerieRadar</span></em>, <em class="sig-param"><span class="n">pathFig</span></em>, <em class="sig-param"><span class="n">chirp</span></em>, <em class="sig-param"><span class="n">hour</span></em>, <em class="sig-param"><span class="n">date</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_time_shift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_time_shift" title="Permalink to this definition">¶</a></dt>
+<dd><p>author: Claudia Acquistapace, Jan. H. Schween, Johannes Roettenbacher
+goal:   calculate and estimation of the time lag between the radar time stamps and the ship time stamp</p>
+<p>NOTE: adding or subtracting the obtained time shift depends on what you did
+during the calculation of the covariances: if you added/subtracted time _shift
+to t_radar you have to do the same for the ‘exact time’
+Here is the time shift analysis as plot:
+&lt;ww&gt; is short for &lt;w’_ship*w’_radar&gt; i.e. covariance between vertical speeds from
+ship movements and radar its maximum gives an estimate for optimal agreement in
+vertical velocities of ship and radar
+&lt;Delta w^2&gt; is short for &lt;(w[i]-w[i-1])^2&gt; where w = w_rad - 2*w_ship - this
+is a measure for the stripeness. Its minimum gives an
+estimate how to get the smoothest w data
+:param w_radar_meanCol: time series of mean Doppler velocity averaged over height with no nan values
+:type w_radar_meanCol: ndarray
+:param delta_t_min: minimum time shift
+:type delta_t_min: float
+:param delta_t_max: maximum time shift
+:type delta_t_max: float
+:param resolution: time step by which to increment possible time shift
+:type resolution: float
+:param w_ship_chirp: vertical velocity of the radar at the exact chirp time step
+:type w_ship_chirp: ndarray
+:param timeSerieRadar: time stamps of the mean Doppler velocity time series (w_radar_meanCol)
+:type timeSerieRadar: ndarray
+:param pathFig: file path where figures should be stored
+:type pathFig: str
+:param chirp: which chirp is being processed
+:type chirp: int
+:param hour: which hour of the day is being processed (0-23)
+:type hour: int
+:param date: which day is being processed
+:type date: datetime</p>
+<p>Returns: time shift between radar data and ship data in seconds, quicklooks for each calculation</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_chirp_timestamps">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_chirp_timestamps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radar_ts</span></em>, <em class="sig-param"><span class="n">date</span></em>, <em class="sig-param"><span class="n">version</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_chirp_timestamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_chirp_timestamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the exact timestamp for each chirp corresponding with the center or start of the chirp
+The timestamp in the radar file corresponds to the end of a chirp sequence with an accuracy of 0.1 s</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radar_ts</strong> (<em>ndarray</em>) – timestamps of the radar with milliseconds in seconds</p></li>
+<li><p><strong>date</strong> (<em>datetime.datetime</em>) – date which is being processed</p></li>
+<li><p><strong>version</strong> (<em>str</em>) – should the timestamp correspond to the ‘center’ or the ‘start’ of the chirp</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns: dict with chirp timestamps</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_shifted_chirp_timestamps">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_shifted_chirp_timestamps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radar_ts</span></em>, <em class="sig-param"><span class="n">radar_mdv</span></em>, <em class="sig-param"><span class="n">chirp_ts</span></em>, <em class="sig-param"><span class="n">rg_borders_id</span></em>, <em class="sig-param"><span class="n">n_ts_run</span></em>, <em class="sig-param"><span class="n">Cs_w_radar</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_shifted_chirp_timestamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_shifted_chirp_timestamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the time shift between each chirp time stamp and the ship time stamp for every hour and every chirp.
+:param radar_ts: radar time stamps in seconds (unix time)
+:type radar_ts: ndarray
+:param radar_mdv: time x height matrix of mean Doppler velocity from radar
+:type radar_mdv: ndarray
+:param chirp_ts: exact chirp time stamps
+:type chirp_ts: ndarray
+:param rg_borders_id: indices of chirp boundaries
+:type rg_borders_id: ndarray
+:param n_ts_run: number of time steps necessary for mean Doppler velocity time series
+:type n_ts_run: int
+:param Cs_w_radar: function of vertical velocity of radar against time
+:type Cs_w_radar: scipy.interpolate.CubicSpline
+:param **kwargs: no_chirps (int): number of chirps in radar measurement</p>
+<blockquote>
+<div><p>plot_fig (bool): plot quicklook</p>
+</div></blockquote>
+<p>Returns: time shifted chirp time stamps, array with time shifts for each chirp and hour</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_corr_matrix_claudia">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_corr_matrix_claudia</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radar_ts</span></em>, <em class="sig-param"><span class="n">radar_rg</span></em>, <em class="sig-param"><span class="n">rg_borders_id</span></em>, <em class="sig-param"><span class="n">chirp_ts_shifted</span></em>, <em class="sig-param"><span class="n">Cs_w_radar</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_corr_matrix_claudia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_corr_matrix_claudia" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the correction matrix to correct the mean Doppler velocity for the ship vertical motion.
+:param radar_ts: original radar time stamps in seconds (unix time)
+:type radar_ts: ndarray
+:param radar_rg: radar range gates
+:type radar_rg: ndarray
+:param rg_borders_id: indices of chirp boundaries
+:type rg_borders_id: ndarray
+:param chirp_ts_shifted: hourly shifted chirp time stamps
+:type chirp_ts_shifted: dict
+:param Cs_w_radar: function of vertical velocity of radar against time
+:type Cs_w_radar: scipy.interpolate.CubicSpline</p>
+<p>Returns: correction matrix for mean Doppler velocity</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.get_range_bin_borders">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">get_range_bin_borders</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">no_chirps</span></em>, <em class="sig-param"><span class="n">container</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#get_range_bin_borders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.get_range_bin_borders" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the range bins which correspond to the chirp borders of a FMCW radar</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>no_chirps</strong> (<em>int</em>) – Number of chirps</p></li>
+<li><p><strong>container</strong> (<em>dict</em>) – Dictionary with C1/2/3Range variable from LV1 files</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>ndarray with chirp borders including 0 range_bins</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_heave_corr">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_heave_corr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">container</span></em>, <em class="sig-param"><span class="n">chirp_ts</span></em>, <em class="sig-param"><span class="n">seapath</span></em>, <em class="sig-param"><span class="n">mean_hr</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_heave_corr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_heave_corr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate heave correction for mean Doppler velocity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>container</strong> (<em>larda container</em>) – LIMRAD94 C1/2/3_Range, SeqIntTime, ts</p></li>
+<li><p><strong>chirp_ts</strong> (<em>dict</em>) – dictionary with exact radar chirp time stamps</p></li>
+<li><p><strong>seapath</strong> (<em>pd.DataFrame</em>) – Data frame with heave rate column (“heave_rate_radar”)</p></li>
+<li><p><strong>mean_hr</strong> (<em>bool</em>) – whether to use the mean heave rate over the SeqIntTime or the heave rate at the start time of the chirp</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>heave rate closest to each radar timestep for each height bin, time x range</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>heave_corr (ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.calc_dopp_res">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">calc_dopp_res</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">MaxVel</span></em>, <em class="sig-param"><span class="n">DoppLen</span></em>, <em class="sig-param"><span class="n">no_chirps</span></em>, <em class="sig-param"><span class="n">range_bins</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#calc_dopp_res"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.calc_dopp_res" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MaxVel</strong> (<em>ndarray</em>) – Unambiguous Doppler velocity (+/-) m/s from LV1 file</p></li>
+<li><p><strong>DoppLen</strong> (<em>ndarray</em>) – Number of spectral lines in Doppler spectra from LV1 file</p></li>
+<li><p><strong>no_chirps</strong> (<em>int</em>) – Number of chirps</p></li>
+<li><p><strong>range_bins</strong> (<em>ndarray</em>) – range bin number of lower chirp borders, starts with 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D array with Doppler resolution for each height bin</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.heave_rate_to_spectra_bins">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">heave_rate_to_spectra_bins</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">heave_corr</span></em>, <em class="sig-param"><span class="n">doppler_res</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#heave_rate_to_spectra_bins"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.heave_rate_to_spectra_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>translate the heave correction to Doppler spectra bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>heave_corr</strong> (<em>ndarray</em>) – heave rate closest to each radar timestep for each height bin, time x range</p></li>
+<li><p><strong>doppler_res</strong> (<em>ndarray</em>) – Doppler resolution of each chirp of LIMRAD94 for whole range 1 x range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>ndarray with number of bins to move each Doppler spectrum</p>
+<ul class="simple">
+<li><p><strong>n_dopp_bins_shift</strong> (<em>ndarray</em>): of same dimension as heave_corr</p></li>
+<li><p><strong>heave_corr</strong></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.shift_seapath">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">shift_seapath</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seapath</span></em>, <em class="sig-param"><span class="n">shift</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#shift_seapath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.shift_seapath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shift seapath values by given shift</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seapath</strong> (<em>pd.Dataframe</em>) – Dataframe with heave motion of RV-Meteor</p></li>
+<li><p><strong>shift</strong> (<em>int</em>) – number of time steps to shift data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>shifted Dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.find_closest_timesteps">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">find_closest_timesteps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">ts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#find_closest_timesteps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.find_closest_timesteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find closest time steps in a dataframe to a time series</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame with DatetimeIndex</p></li>
+<li><p><strong>ts</strong> (<em>ndarray</em>) – array with time stamps in unix format (seconds since 1-1-1970)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame with only the closest time steps to ts</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.spectra2sldr">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">spectra2sldr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ZSpec</span></em>, <em class="sig-param"><span class="n">paraminfo</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#spectra2sldr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.spectra2sldr" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine calculates the</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ZSpec</strong> (<em>dict</em>) – list containing the dicts for each chrip of RPG-FMCW Doppler cloud radar</p></li>
+<li><p><strong>paraminfo</strong> (<em>dict</em>) – information from params_[campaign].toml for the system LIMRAD94</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of larda containers, including larda container for Ze, VEL, sw, skew, kurt</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>container_dict (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.SpectraProcessing.spectra2polarimetry">
+<code class="sig-prename descclassname">pyLARDA.SpectraProcessing.</code><code class="sig-name descname">spectra2polarimetry</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ZSpec</span></em>, <em class="sig-param"><span class="n">paraminfo</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/SpectraProcessing.html#spectra2polarimetry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.SpectraProcessing.spectra2polarimetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine calculates the</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ZSpec</strong> (<em>dict</em>) – list containing the dicts for each chrip of RPG-FMCW Doppler cloud radar</p></li>
+<li><p><strong>paraminfo</strong> (<em>dict</em>) – information from params_[campaign].toml for the system LIMRAD94</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dictionary of larda containers, including larda container for Ze, VEL, sw, skew, kurt</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>container_dict (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api_overview.html" class="btn btn-neutral float-right" title="API documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="peakTree.html" class="btn btn-neutral float-left" title="peakTree extension" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020 pyLARDA-dev-team
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

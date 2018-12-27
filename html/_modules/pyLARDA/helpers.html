@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyLARDA.helpers &mdash; pyLARDA  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> pyLARDA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_use.html">How to use larda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../datacontainer_and_transformation.html">Data container and transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_config.html">Guide to config-files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../setup_remote.html">Setup remote date source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../peakTree.html">peakTree extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../spectra.html">SpectraProcessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api_overview.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributors.html">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pyLARDA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../pyLARDA.html">pyLARDA</a> &raquo;</li>
+        
+      <li>pyLARDA.helpers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyLARDA.helpers</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python</span>
+
+
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pprint</span> <span class="k">as</span> <span class="nn">pp</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">ident</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+
+<div class="viewcode-block" id="get_converter_array"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.get_converter_array">[docs]</a><span class="k">def</span> <span class="nf">get_converter_array</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;colletion of converters that works on arrays</span>
+<span class="sd">    combines time, range and varconverters (i see no conceptual separation here)</span>
+<span class="sd">   </span>
+<span class="sd">    the maskconverter becomes relevant, if the order is no</span>
+<span class="sd">    time, range, whatever (as in mira spec)</span>
+
+<span class="sd">    chaining example:</span>
+<span class="sd">    ```var_conversion = &#39;z2lin,extrfromaxis2(0)&#39;```</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (varconverter, maskconverter) which both are functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="n">converters</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_converter_array</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+        <span class="n">varfuncs</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">([</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">converters</span><span class="p">])</span>
+        <span class="n">maskfuncs</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">([</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">converters</span><span class="p">])</span>
+        <span class="n">varf</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">varfuncs</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">maskf</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">r</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">(</span><span class="n">r</span><span class="p">),</span> <span class="n">maskfuncs</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">varf</span><span class="p">,</span> <span class="n">maskf</span>
+
+
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;since20010101&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;hours_since20150101&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;unix&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;since19691231&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1969</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">23</span><span class="p">)),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;since19700101&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1970</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;since19040101&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1904</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;beginofday&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;ncD&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">h</span><span class="p">:</span> <span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3600.</span> <span class="o">+</span> \
+                               <span class="nb">float</span><span class="p">(</span><span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ncD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
+                                                                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ncD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">month</span><span class="p">,</span>
+                                                                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;ncD&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">day</span><span class="p">)))),</span>
+                    <span class="n">ident</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;hours_since_year0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span> <span class="o">-</span> <span class="mf">62167305599.99999</span><span class="p">,</span>
+                <span class="n">ident</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;pollytime&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">])),</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">))</span>\
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]),</span>
+                <span class="n">ident</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;since20200101&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,)),</span> <span class="n">ident</span>
+
+
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;km2m&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">*</span> <span class="mf">1000.</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;sealevel2range&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">-</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">],</span> <span class="n">ident</span>
+
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;z2lin&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">z2lin</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;lin2z&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">lin2z</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;switchsign&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">ident</span>
+
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;mira_azi_offset&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;mira_azi_zero&#39;</span><span class="p">])</span> <span class="o">%</span> <span class="mi">360</span><span class="p">,</span> <span class="n">ident</span>
+
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;transposedim&#39;</span><span class="p">:</span>
+        <span class="c1">#return np.transpose, np.transpose</span>
+        <span class="k">return</span> <span class="n">transpose_only</span><span class="p">,</span> <span class="n">transpose_only</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;transposedim+invert3rd&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">transpose_and_invert</span><span class="p">,</span> <span class="n">transpose_and_invert</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;divideby2&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">divide_by</span><span class="p">(</span><span class="mf">2.</span><span class="p">),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;keepNyquist&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ident</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;raw2Z&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">raw2Z</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;extract_level0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;extract_level1&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;extract_level2&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s1">&#39;extract_1st&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,],</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="n">string</span> <span class="o">==</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ident</span><span class="p">,</span> <span class="n">ident</span>
+    <span class="k">elif</span> <span class="s1">&#39;extrfromaxis2&#39;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_extrfromaxis2</span><span class="p">(</span><span class="n">string</span><span class="p">),</span> <span class="n">get_extrfromaxis2</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;converter </span><span class="si">{}</span><span class="s2"> not defined&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">string</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">transpose_only</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">var</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">transpose_and_invert</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">var</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">divide_by</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">var</span><span class="p">:</span> <span class="n">var</span> <span class="o">/</span> <span class="n">val</span>
+
+
+<div class="viewcode-block" id="flatten"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.flatten">[docs]</a><span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">xs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;flatten inhomogeneous deep lists</span>
+<span class="sd">    e.g. ``[[1,2,3],4,5,[6,[7,8],9],10]``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="since2001_to_dt"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.since2001_to_dt">[docs]</a><span class="k">def</span> <span class="nf">since2001_to_dt</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;seconds since 2001-01-01 to datetime&quot;&quot;&quot;</span>
+    <span class="c1"># return (dt - datetime.datetime(1970, 1, 1)).total_seconds()</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2001</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="dt_to_ts"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.dt_to_ts">[docs]</a><span class="k">def</span> <span class="nf">dt_to_ts</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;datetime to unix timestamp&quot;&quot;&quot;</span>
+    <span class="c1"># return dt.replace(tzinfo=datetime.timezone.utc).timestamp()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">dt</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1970</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ts_to_dt"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.ts_to_dt">[docs]</a><span class="k">def</span> <span class="nf">ts_to_dt</span><span class="p">(</span><span class="n">ts</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;unix timestamp to dt&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="argnearest"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.argnearest">[docs]</a><span class="k">def</span> <span class="nf">argnearest</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;find the index of the nearest value in a sorted array</span>
+<span class="sd">    for example time or range axis</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        array (np.array): sorted array with values, list will be converted to 1D array</span>
+<span class="sd">        value: value to find</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        index  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">array</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span> <span class="o">==</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">array</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">):</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">i</span></div>
+
+
+<div class="viewcode-block" id="nearest"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.nearest">[docs]</a><span class="k">def</span> <span class="nf">nearest</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">pivot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;find the nearest value to a given one</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        array (np.array): sorted array with values</span>
+<span class="sd">        pivot: value to find</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        value with smallest distance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">pivot</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="lin2z"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.lin2z">[docs]</a><span class="k">def</span> <span class="nf">lin2z</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;linear values to dB (for np.array or single number)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">array</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="z2lin"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.z2lin">[docs]</a><span class="k">def</span> <span class="nf">z2lin</span><span class="p">(</span><span class="n">array</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;dB to linear values (for np.array or single number)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">array</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="raw2Z"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.raw2Z">[docs]</a><span class="k">def</span> <span class="nf">raw2Z</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;raw signal units (MRR-Pro) to reflectivity Z&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">array</span> <span class="o">*</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;wl&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.93</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span></div>
+
+
+<div class="viewcode-block" id="get_extrfromaxis2"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.get_extrfromaxis2">[docs]</a><span class="k">def</span> <span class="nf">get_extrfromaxis2</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get function that extracts given index from axis2&quot;&quot;&quot;</span>
+
+    <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\((\d+)\)&quot;</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[:,:,</span><span class="n">ind</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="fill_with"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.fill_with">[docs]</a><span class="k">def</span> <span class="nf">fill_with</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">fill</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;fill an array where mask is true with fill value&quot;&quot;&quot;</span>
+    <span class="n">filled</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">filled</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">fill</span>
+    <span class="k">return</span> <span class="n">filled</span></div>
+
+
+<div class="viewcode-block" id="guess_str_to_dict"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.guess_str_to_dict">[docs]</a><span class="k">def</span> <span class="nf">guess_str_to_dict</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;try to convert a text string into a dict</span>
+<span class="sd">    intended to be used in the var_def</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict with flag as key and description string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="k">if</span> <span class="s2">&quot;{&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="c1">#probalby already the stringified python format</span>
+        <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Value&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="c1"># the cloudnetpy format \nValue 0: desc\n ....</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Value &#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="n">d</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">d</span>
+    <span class="k">elif</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="c1"># the cloudnet format 0: desc\n ....</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+            <span class="n">d</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">d</span>
+    <span class="k">elif</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="c1"># pollynet format</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">):</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d{1,2}): (.*)&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+            <span class="n">d</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">d</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># unknown format</span>
+        <span class="k">return</span> <span class="n">string</span></div>
+
+
+<span class="k">def</span> <span class="nf">_method_info_from_argv</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Command-line -&gt; method call arg processing.</span>
+
+<span class="sd">    - positional args:</span>
+<span class="sd">            a b -&gt; method(&#39;a&#39;, &#39;b&#39;)</span>
+<span class="sd">    - intifying args:</span>
+<span class="sd">            a 123 -&gt; method(&#39;a&#39;, 123)</span>
+<span class="sd">    - json loading args:</span>
+<span class="sd">            a &#39;[&quot;pi&quot;, 3.14, null]&#39; -&gt; method(&#39;a&#39;, [&#39;pi&#39;, 3.14, None])</span>
+<span class="sd">    - keyword args:</span>
+<span class="sd">            a foo=bar -&gt; method(&#39;a&#39;, foo=&#39;bar&#39;)</span>
+<span class="sd">    - using more of the above</span>
+<span class="sd">            1234 &#39;extras=[&quot;r2&quot;]&#39;  -&gt; method(1234, extras=[&quot;r2&quot;])</span>
+
+<span class="sd">    @param argv {list} Command line arg list. Defaults to `sys.argv`.</span>
+<span class="sd">    @returns (&lt;method-name&gt;, &lt;args&gt;, &lt;kwargs&gt;)</span>
+
+<span class="sd">    Reference: http://code.activestate.com/recipes/577122-transform-command-line-arguments-to-args-and-kwarg/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
+
+    <span class="n">method_name</span><span class="p">,</span> <span class="n">arg_strs</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">arg_strs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">s</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span>
+
+
+<div class="viewcode-block" id="reshape_spectra"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.reshape_spectra">[docs]</a><span class="k">def</span> <span class="nf">reshape_spectra</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function reshapes time, range and var variables of a data container and returns numpy arrays.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): data container</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list with</span>
+
+<span class="sd">        - ts (numpy.array): time stamp numpy array, dim = (n_time,)</span>
+<span class="sd">        - rg (numpy.array): range stamp numpy array, dim = (n_range,)</span>
+<span class="sd">        - var (numpy.array): values of the spectra numpy array, dim = (n_time, n_range, n_vel)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_ts</span><span class="p">,</span> <span class="n">n_rg</span><span class="p">,</span> <span class="n">n_vel</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dimlabel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="s1">&#39;vel&#39;</span><span class="p">]:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dimlabel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;vel&#39;</span><span class="p">]:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">n_rg</span><span class="p">,))</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">n_ts</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">n_ts</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dimlabel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="s1">&#39;vel&#39;</span><span class="p">]:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="p">(</span><span class="n">n_ts</span><span class="p">,))</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rg</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_rg</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dimlabel&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">]:</span>
+        <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="p">(</span><span class="n">n_ts</span><span class="p">,))</span>
+        <span class="n">rg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">],</span> <span class="p">(</span><span class="n">n_rg</span><span class="p">,))</span>
+        <span class="n">var</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_vel</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Wrong data format in plot_spectra&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ts</span><span class="p">,</span> <span class="n">rg</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">mask</span></div>
+
+
+<div class="viewcode-block" id="pformat"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.pformat">[docs]</a><span class="k">def</span> <span class="nf">pformat</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;return a pretty string from a data_container&quot;&quot;&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;== data container: system </span><span class="si">{}</span><span class="s2"> name </span><span class="si">{}</span><span class="s2">  ==&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;system&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]))</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;dimlabel    </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;dimlabel&quot;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">&quot;time&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dimlabel&quot;</span><span class="p">]:</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;timestamps  </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">ts_to_dt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ts_to_dt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;ts&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])))</span>
+    <span class="k">elif</span> <span class="s2">&quot;ts&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;timestamp   </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ts_to_dt</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">])))</span>
+    <span class="k">if</span> <span class="s2">&quot;range&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dimlabel&quot;</span><span class="p">]:</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;range       </span><span class="si">{}</span><span class="s2"> </span><span class="si">{:7.2f}</span><span class="s2"> to </span><span class="si">{:7.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rg&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;rg&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;rg_unit     </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;rg_unit&quot;</span><span class="p">]))</span>
+    <span class="k">elif</span> <span class="s2">&quot;rg&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;range       </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;rg&#39;</span><span class="p">]))</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;rg_unit     </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;rg_unit&quot;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="s2">&quot;vel&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;vel         </span><span class="si">{}</span><span class="s2">  </span><span class="si">{:5.2f}</span><span class="s2"> to </span><span class="si">{:5.2f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;vel&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;vel&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;vel&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">]):</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;var         </span><span class="si">{}</span><span class="s2">  min </span><span class="si">{:7.2e}</span><span class="s2"> max </span><span class="si">{:7.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">][</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">][</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]])))</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;            mean </span><span class="si">{:7.2e}</span><span class="s2"> median </span><span class="si">{:7.2e}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">][</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]]),</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">][</span><span class="o">~</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]])))</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;mask        </span><span class="si">{:4.1f}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;mask&quot;</span><span class="p">])</span><span class="o">/</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mf">100.</span><span class="p">))</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;var_unit    </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;var_unit&quot;</span><span class="p">]))</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;var_lims    </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;var_lims&quot;</span><span class="p">]))</span>
+    <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;default colormap </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;colormap&quot;</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;filenames&quot;</span><span class="p">)</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;paraminfo&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">())</span>
+        <span class="n">string</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pp</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;paraminfo&#39;</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="isKthBitSet"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.isKthBitSet">[docs]</a><span class="k">def</span> <span class="nf">isKthBitSet</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to check if a certain bit of a number is set (required to analyse quality flags)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="pprint"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.pprint">[docs]</a><span class="k">def</span> <span class="nf">pprint</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;print a pretty representation of the data container&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pformat</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="extract_case_from_excel_sheet"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.extract_case_from_excel_sheet">[docs]</a><span class="k">def</span> <span class="nf">extract_case_from_excel_sheet</span><span class="p">(</span><span class="n">data_loc</span><span class="p">,</span> <span class="n">sheet_nr</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This function extracts information from an excel sheet. It can be used for different scenarios.</span>
+<span class="sd">    The first row of the excel sheet contains the headline, defined as follows:</span>
+
+<span class="sd">    +----+-------+-------+-------+-------+-------+-------+------------+-------+</span>
+<span class="sd">    |    |   A   |   B   |   C   |   D   |   E   |   F   |      G     |   H   |</span>
+<span class="sd">    +----+-------+-------+-------+-------+-------+-------+------------+-------+</span>
+<span class="sd">    |  1 |  date | start |  end  |   h0  |  hend |  MDF  |  noise_fac | notes |</span>
+<span class="sd">    +----+-------+-------+-------+-------+-------+-------+------------+-------+</span>
+
+
+<span class="sd">                                OR</span>
+
+<span class="sd">    +----+------------+----------+-------+-------+-----------+--------+</span>
+<span class="sd">    |    |      A     |     B    |   C   |   D   |     E     |    F   |</span>
+<span class="sd">    +----+------------+----------+-------+-------+-----------+--------+</span>
+<span class="sd">    |  1 |  datestart |  dateend |   h0  |  hend | noise_fac |  notes |</span>
+<span class="sd">    +----+------------+----------+-------+-------+-----------+--------+</span>
+
+
+<span class="sd">    The following rows contain the cases of interest. Make sure that the ALL the data in the excel sheet is formatted as</span>
+<span class="sd">    string! The data has to be provided in the following syntax:</span>
+
+<span class="sd">        - date (string): format YYYYMMDD</span>
+<span class="sd">        - start (string): format HHMMSS</span>
+<span class="sd">        - datestart (string): format YYYYMMDDHHMMSS</span>
+<span class="sd">        - dateend (string): format YYYYMMDDHHMMSS</span>
+<span class="sd">        - end (string): format HHMMSS</span>
+<span class="sd">        - h0 (string): minimum height</span>
+<span class="sd">        - hend (string): maximum height</span>
+<span class="sd">        - MDF (string): name of the MDF used for this case</span>
+<span class="sd">        - noise_fac (string): noise factor</span>
+<span class="sd">        - notes (string): additional notes for the case (stored but not in use by the program)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_loc (string): path to the excel file (make sure the data_loc contains the suffix .xlsx)</span>
+<span class="sd">        sheet_nr (integer): number of the desired excel sheet</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        case_list contains the information for all cases</span>
+<span class="sd">            </span>
+<span class="sd">        - begin_dt (datetime object): start of the time interval</span>
+<span class="sd">        - end_dt (datetime object): end of the time interval</span>
+<span class="sd">        - plot_range (list): height interval</span>
+<span class="sd">        - MDF_name (string): name of MDF used for this case</span>
+<span class="sd">        - noisefac (string): number of standard deviations above mean noise level</span>
+<span class="sd">        - notes (string): additional notes for the user</span>
+<span class="sd">            </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">xlrd</span>
+
+    <span class="n">excel_sheet</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">data_loc</span><span class="p">)</span>
+    <span class="n">sheet</span> <span class="o">=</span> <span class="n">excel_sheet</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="n">sheet_nr</span><span class="p">)</span>
+    <span class="n">case_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ann_input&#39;</span><span class="p">:</span>
+        <span class="c1"># exclude header from data</span>
+        <span class="k">for</span> <span class="n">icase</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+            <span class="n">irow</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="n">icase</span><span class="p">)</span>
+            <span class="n">irow</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">irow</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;ex&#39;</span><span class="p">:</span>
+                <span class="n">case_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">&#39;begin_dt&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M%S&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;end_dt&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">%H%M%S&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;plot_range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">3</span><span class="p">])],</span>
+                    <span class="s1">&#39;noise_fac&#39;</span><span class="p">:</span> <span class="n">irow</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+                    <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">irow</span><span class="p">[</span><span class="mi">5</span><span class="p">]})</span>
+
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;kind&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;cumulustest&#39;</span><span class="p">:</span>
+        <span class="c1"># exclude header from data</span>
+        <span class="k">for</span> <span class="n">icase</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+            <span class="n">irow</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="n">icase</span><span class="p">)</span>
+            <span class="n">irow</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">irow</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;ex&#39;</span><span class="p">:</span>
+                <span class="n">case_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                    <span class="s1">&#39;begin_dt&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1"> %H%M%S&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;end_dt&#39;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1"> %H%M%S&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;plot_range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">irow</span><span class="p">[</span><span class="mi">4</span><span class="p">])],</span>
+                    <span class="s1">&#39;MDF_name&#39;</span><span class="p">:</span> <span class="n">irow</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
+                    <span class="s1">&#39;noisefac&#39;</span><span class="p">:</span> <span class="n">irow</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
+                    <span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="n">irow</span><span class="p">[</span><span class="mi">7</span><span class="p">]})</span>
+
+    <span class="k">return</span> <span class="n">case_list</span></div>
+
+
+<div class="viewcode-block" id="interp_only_3rd_dim"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.interp_only_3rd_dim">[docs]</a><span class="k">def</span> <span class="nf">interp_only_3rd_dim</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;function to interpolate only the velocity (3rd) axis&quot;&quot;&quot;</span>
+
+    <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">interpolate</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">old</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                             <span class="n">bounds_error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=-</span><span class="mf">999.</span><span class="p">)</span>
+    <span class="n">new_arr</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">new</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">new_arr</span></div>
+
+
+<div class="viewcode-block" id="put_in_container"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.put_in_container">[docs]</a><span class="k">def</span> <span class="nf">put_in_container</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_container</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This routine will generate a new larda container, replacing var in the data_container given with data</span>
+
+<span class="sd">    Kwargs:</span>
+<span class="sd">        all keys used in larda containers, that is</span>
+<span class="sd">        paraminfo (dict): information from params_[campaign].toml for the specific variable</span>
+<span class="sd">        rg_unit: range unit</span>
+<span class="sd">        mask: ndarray of same size as var, indicating masked values</span>
+<span class="sd">        ts: time stamp in unix time</span>
+<span class="sd">        var_lims: variable limits</span>
+<span class="sd">        colormap: colormap to be used for plotting</span>
+
+
+<span class="sd">    Return:</span>
+<span class="sd">        container (dict): larda data container</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">container</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">data_container</span><span class="p">)</span>
+    <span class="n">container</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">container</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">container</span></div>
+
+
+<div class="viewcode-block" id="change_dir"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.change_dir">[docs]</a><span class="k">def</span> <span class="nf">change_dir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This routine changes to a folder or creates it (including subfolders) if it does not exist already.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder_path (string): path of folder to switch into</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">folder_path</span> <span class="o">=</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;//&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">folder_path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># Guard against race condition</span>
+            <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+                <span class="k">raise</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">cd to: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">folder_path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="make_dir"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.make_dir">[docs]</a><span class="k">def</span> <span class="nf">make_dir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This routine changes to a folder or creates it (including subfolders) if it does not exist already.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        folder_path (string): path of folder to switch into</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">folder_path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># Guard against race condition</span>
+            <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+                <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="print_traceback"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.print_traceback">[docs]</a><span class="k">def</span> <span class="nf">print_traceback</span><span class="p">(</span><span class="n">txt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Print the traceback to an error to screen.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        - txt (string): error msg</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+    <span class="n">track</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">track</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="smooth"><a class="viewcode-back" href="../../api_overview.html#pyLARDA.helpers.smooth">[docs]</a><span class="k">def</span> <span class="nf">smooth</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">box_pts</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Smooth a one dimensional array using a rectangular window of box_pts points</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        y (np.array): array to be smoothed</span>
+<span class="sd">        box_pts: number of points of the rectangular smoothing window</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        y_smooth (np.arrax): smoothed array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">box</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">box_pts</span><span class="p">)</span> <span class="o">/</span> <span class="n">box_pts</span>
+    <span class="k">if</span> <span class="n">padding</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;constant&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)[</span><span class="n">box_pts</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="n">box_pts</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">box</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020 pyLARDA-dev-team
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

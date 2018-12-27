@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API documentation &mdash; pyLARDA  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributors" href="contributors.html" />
+    <link rel="prev" title="SpectraProcessing" href="spectra.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> pyLARDA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to use larda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datacontainer_and_transformation.html">Data container and transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide_config.html">Guide to config-files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup_remote.html">Setup remote date source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="peakTree.html">peakTree extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spectra.html">SpectraProcessing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA">pyLARDA main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA.Connector">pyLARDA.Connector module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA.helpers">pyLARDA.helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA.NcReader">pyLARDA.NcReader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA.NcWrite">pyLARDA.NcWrite module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyLARDA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api_overview.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-documentation">
+<h1>API documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-pyLARDA">
+<span id="pylarda-main-module"></span><h2>pyLARDA main module<a class="headerlink" href="#module-pyLARDA" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pyLARDA.LARDA">
+<em class="property">class </em><code class="sig-prename descclassname">pyLARDA.</code><code class="sig-name descname">LARDA</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_source</span><span class="o">=</span><span class="default_value">'local'</span></em>, <em class="sig-param"><span class="n">uri</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>init a new larda instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_source</strong> (<em>str</em><em>, </em><em>optional</em>) – either <code class="docutils literal notranslate"><span class="pre">'local'</span></code> or <code class="docutils literal notranslate"><span class="pre">'remote'</span></code></p></li>
+<li><p><strong>uri</strong> – link to backend</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pyLARDA.LARDA.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>switch to decide whether connect to local or remote data source</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.LARDA.connect_local">
+<code class="sig-name descname">connect_local</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">camp_name</span></em>, <em class="sig-param"><span class="n">build_lists</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA.connect_local"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA.connect_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>built the connector list for the specified campaign (only valid systems are considered)
+the connectors are instances of the Connector.Connector Class</p>
+<p>NEW: one connector per system
+then the params are parts of this system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>camp_name</strong> (<em>str</em>) – name of campaign as defined in <code class="docutils literal notranslate"><span class="pre">campaigns.toml</span></code></p></li>
+<li><p><strong>build_lists</strong> (<em>Bool</em><em>, </em><em>optional</em>) – Flag to build the filelists or not (with many files this may take some time)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.LARDA.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em>, <em class="sig-param"><span class="n">parameter</span></em>, <em class="sig-param"><span class="n">time_interval</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">further_slices</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA.read" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong> (<em>str</em>) – identifier for the system</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – choosen param</p></li>
+<li><p><strong>time_interval</strong> – <code class="docutils literal notranslate"><span class="pre">[dt,</span> <span class="pre">dt]</span></code> time interval, or [dt] one time</p></li>
+<li><p><strong>*further_slices</strong> – range, vel,.. <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">max]</span></code> or [3000]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dictionary with data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.LARDA.description">
+<code class="sig-name descname">description</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em>, <em class="sig-param"><span class="n">parameter</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA.description"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA.description" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong> (<em>str</em>) – identifier for the system</p></li>
+<li><p><strong>parameter</strong> (<em>str</em>) – choosen param</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the description tag as string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.LARDA.days_with_data">
+<code class="sig-name descname">days_with_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA.days_with_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA.days_with_data" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the number of files per day for each system</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyLARDA.LARDA_campaign">
+<em class="property">class </em><code class="sig-prename descclassname">pyLARDA.</code><code class="sig-name descname">LARDA_campaign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_dir</span></em>, <em class="sig-param"><span class="n">campaign_file</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA_campaign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA_campaign" title="Permalink to this definition">¶</a></dt>
+<dd><p>provides information about campaigns collected in LARDA</p>
+<dl class="py method">
+<dt id="pyLARDA.LARDA_campaign.get_campaign_list">
+<code class="sig-name descname">get_campaign_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA_campaign.get_campaign_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA_campaign.get_campaign_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>list of all campaign names stored in csv-file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.LARDA_campaign.assign_campaign">
+<code class="sig-name descname">assign_campaign</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA.html#LARDA_campaign.assign_campaign"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.LARDA_campaign.assign_campaign" title="Permalink to this definition">¶</a></dt>
+<dd><p>dedicate object to a specific campaign</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyLARDA.Connector">
+<span id="pylarda-connector-module"></span><h2>pyLARDA.Connector module<a class="headerlink" href="#module-pyLARDA.Connector" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyLARDA.Connector.convert_regex_date_to_dt">
+<code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">convert_regex_date_to_dt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">re_date</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#convert_regex_date_to_dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.convert_regex_date_to_dt" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert a re_date dict to datetime</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When using 2 digit years (i.e. RPG) a 20 will
+be added in front</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>re_date</strong> (<em>dict</em>) – result of the regex search with keys</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.Connector.convert_to_datestring">
+<code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">convert_to_datestring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">datepattern</span></em>, <em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#convert_to_datestring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.convert_to_datestring" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the date in a (file-)string to dt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datepatttern</strong> – a python regex definition with named groups</p></li>
+<li><p><strong>f</strong> – the string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>datetime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.Connector.setupreader">
+<code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">setupreader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="_modules/pyLARDA/Connector.html#setupreader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.setupreader" title="Permalink to this definition">¶</a></dt>
+<dd><p>obtain the reader from the paraminfo</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.Connector.setup_valid_date_filter">
+<code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">setup_valid_date_filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">valid_dates</span></em><span class="sig-paren">)</span> &#x2192; Callable<a class="reference internal" href="_modules/pyLARDA/Connector.html#setup_valid_date_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.setup_valid_date_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="pyLARDA.Connector.Connector_remote">
+<em class="property">class </em><code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">Connector_remote</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">camp_name</span></em>, <em class="sig-param"><span class="n">system</span></em>, <em class="sig-param"><span class="n">plain_dict</span></em>, <em class="sig-param"><span class="n">uri</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector_remote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector_remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>connect the data (from the a remote source) to larda</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>camp_name</strong> (<em>str</em>) – campaign name</p></li>
+<li><p><strong>system</strong> (<em>str</em>) – system identifier</p></li>
+<li><p><strong>plain_dict</strong> (<em>dict</em>) – connector meta info</p></li>
+<li><p><strong>uri</strong> (<em>str</em>) – address of the remote source</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector_remote.collect">
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param</span></em>, <em class="sig-param"><span class="n">time_interval</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">further_intervals</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector_remote.collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector_remote.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>collect the data from a parameter for the given intervals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>str</em>) – </p></li>
+<li><p><strong>time_interval</strong> – list of begin and end datetime</p></li>
+<li><p><strong>*further_intervals</strong> – range, velocity, …</p></li>
+<li><p><strong>**interp_rg_join</strong> – interpolate range during join</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data_container</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector_remote.description">
+<code class="sig-name descname">description</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector_remote.description"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector_remote.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the description str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pyLARDA.Connector.Connector">
+<em class="property">class </em><code class="sig-prename descclassname">pyLARDA.Connector.</code><code class="sig-name descname">Connector</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em>, <em class="sig-param"><span class="n">system_info</span></em>, <em class="sig-param"><span class="n">valid_dates</span></em>, <em class="sig-param"><span class="n">description_dir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector" title="Permalink to this definition">¶</a></dt>
+<dd><p>connect the data (from the ncfiles/local sources) to larda</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong> (<em>str</em>) – system identifier</p></li>
+<li><p><strong>system_info</strong> (<em>dict</em>) – dict info loaded from toml</p></li>
+<li><p><strong>valid_dates</strong> (<em>list of lists</em>) – list of begin and end datetime</p></li>
+<li><p><strong>description_dir</strong> (<em>optional</em>) – dir with the description rst</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.build_filehandler">
+<code class="sig-name descname">build_filehandler</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.build_filehandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.build_filehandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>scrape the directories and build the filehandler</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.save_filehandler">
+<code class="sig-name descname">save_filehandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">camp_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.save_filehandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.save_filehandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the filehandler to json file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.load_filehandler">
+<code class="sig-name descname">load_filehandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">camp_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.load_filehandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.load_filehandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>load the filehandler from the json file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.collect">
+<code class="sig-name descname">collect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param</span></em>, <em class="sig-param"><span class="n">time_interval</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">further_intervals</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.collect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.collect" title="Permalink to this definition">¶</a></dt>
+<dd><p>collect the data from a parameter for the given intervals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>str</em>) – </p></li>
+<li><p><strong>time_interval</strong> – list of begin and end datetime</p></li>
+<li><p><strong>*further_intervals</strong> – range, velocity, …</p></li>
+<li><p><strong>**interp_rg_join</strong> – interpolate range during join</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data_container</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.get_as_plain_dict">
+<code class="sig-name descname">get_as_plain_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.get_as_plain_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.get_as_plain_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>put the most important information of the connector into a plain dict (for http tranfer)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>connector information</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">params</span><span class="p">:</span> <span class="p">{</span><span class="n">param_name</span><span class="p">:</span> <span class="n">fileidentifier</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>
+<span class="n">avail</span><span class="p">:</span> <span class="p">{</span><span class="n">fileidentifier</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;YYYYMMDD&quot;</span><span class="p">:</span> <span class="n">no_files</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span> <span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.get_matching_files">
+<code class="sig-name descname">get_matching_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">begin_time</span></em>, <em class="sig-param"><span class="n">end_time</span></em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.get_matching_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.get_matching_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the files within time range from connectors filelist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of matching files</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pyLARDA.Connector.Connector.files_per_day">
+<code class="sig-name descname">files_per_day</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">which_path</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/pyLARDA/Connector.html#Connector.files_per_day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.Connector.Connector.files_per_day" title="Permalink to this definition">¶</a></dt>
+<dd><p>replaces <code class="docutils literal notranslate"><span class="pre">days_available</span></code> and <code class="docutils literal notranslate"><span class="pre">day_available</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><p>dict with days and no of files</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;YYYYMMDD&#39;</span><span class="p">:</span> <span class="n">no</span> <span class="n">of</span> <span class="n">files</span><span class="p">,</span> <span class="o">...</span><span class="p">}</span>
+</pre></div>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyLARDA.helpers">
+<span id="pylarda-helpers-module"></span><h2>pyLARDA.helpers module<a class="headerlink" href="#module-pyLARDA.helpers" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyLARDA.helpers.get_converter_array">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">get_converter_array</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#get_converter_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.get_converter_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>colletion of converters that works on arrays
+combines time, range and varconverters (i see no conceptual separation here)</p>
+<p>the maskconverter becomes relevant, if the order is no
+time, range, whatever (as in mira spec)</p>
+<p>chaining example:
+<code class="docutils literal notranslate"><span class="pre">`var_conversion</span> <span class="pre">=</span> <span class="pre">'z2lin,extrfromaxis2(0)'`</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(varconverter, maskconverter) which both are functions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.flatten">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">flatten</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">xs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#flatten"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>flatten inhomogeneous deep lists
+e.g. <code class="docutils literal notranslate"><span class="pre">[[1,2,3],4,5,[6,[7,8],9],10]</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.since2001_to_dt">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">since2001_to_dt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#since2001_to_dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.since2001_to_dt" title="Permalink to this definition">¶</a></dt>
+<dd><p>seconds since 2001-01-01 to datetime</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.dt_to_ts">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">dt_to_ts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#dt_to_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.dt_to_ts" title="Permalink to this definition">¶</a></dt>
+<dd><p>datetime to unix timestamp</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.ts_to_dt">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">ts_to_dt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ts</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#ts_to_dt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.ts_to_dt" title="Permalink to this definition">¶</a></dt>
+<dd><p>unix timestamp to dt</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.argnearest">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">argnearest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#argnearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.argnearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the index of the nearest value in a sorted array
+for example time or range axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>np.array</em>) – sorted array with values, list will be converted to 1D array</p></li>
+<li><p><strong>value</strong> – value to find</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.nearest">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">nearest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">pivot</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.nearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>find the nearest value to a given one</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>np.array</em>) – sorted array with values</p></li>
+<li><p><strong>pivot</strong> – value to find</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>value with smallest distance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.lin2z">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">lin2z</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#lin2z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.lin2z" title="Permalink to this definition">¶</a></dt>
+<dd><p>linear values to dB (for np.array or single number)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.z2lin">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">z2lin</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#z2lin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.z2lin" title="Permalink to this definition">¶</a></dt>
+<dd><p>dB to linear values (for np.array or single number)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.raw2Z">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">raw2Z</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#raw2Z"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.raw2Z" title="Permalink to this definition">¶</a></dt>
+<dd><p>raw signal units (MRR-Pro) to reflectivity Z</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.get_extrfromaxis2">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">get_extrfromaxis2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#get_extrfromaxis2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.get_extrfromaxis2" title="Permalink to this definition">¶</a></dt>
+<dd><p>get function that extracts given index from axis2</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.fill_with">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">fill_with</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">mask</span></em>, <em class="sig-param"><span class="n">fill</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#fill_with"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.fill_with" title="Permalink to this definition">¶</a></dt>
+<dd><p>fill an array where mask is true with fill value</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.guess_str_to_dict">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">guess_str_to_dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#guess_str_to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.guess_str_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>try to convert a text string into a dict
+intended to be used in the var_def</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dict with flag as key and description string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.reshape_spectra">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">reshape_spectra</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#reshape_spectra"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.reshape_spectra" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function reshapes time, range and var variables of a data container and returns numpy arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>dict</em>) – data container</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>list with</p>
+<ul class="simple">
+<li><p>ts (numpy.array): time stamp numpy array, dim = (n_time,)</p></li>
+<li><p>rg (numpy.array): range stamp numpy array, dim = (n_range,)</p></li>
+<li><p>var (numpy.array): values of the spectra numpy array, dim = (n_time, n_range, n_vel)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.pformat">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">pformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#pformat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.pformat" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a pretty string from a data_container</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.isKthBitSet">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">isKthBitSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em>, <em class="sig-param"><span class="n">k</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#isKthBitSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.isKthBitSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to check if a certain bit of a number is set (required to analyse quality flags)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.pprint">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">pprint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#pprint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.pprint" title="Permalink to this definition">¶</a></dt>
+<dd><p>print a pretty representation of the data container</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.extract_case_from_excel_sheet">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">extract_case_from_excel_sheet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_loc</span></em>, <em class="sig-param"><span class="n">sheet_nr</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#extract_case_from_excel_sheet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.extract_case_from_excel_sheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function extracts information from an excel sheet. It can be used for different scenarios.
+The first row of the excel sheet contains the headline, defined as follows:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 18%" />
+<col style="width: 11%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p>A</p></td>
+<td><p>B</p></td>
+<td><p>C</p></td>
+<td><p>D</p></td>
+<td><p>E</p></td>
+<td><p>F</p></td>
+<td><p>G</p></td>
+<td><p>H</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>date</p></td>
+<td><p>start</p></td>
+<td><p>end</p></td>
+<td><p>h0</p></td>
+<td><p>hend</p></td>
+<td><p>MDF</p></td>
+<td><p>noise_fac</p></td>
+<td><p>notes</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>OR</p>
+</div></blockquote>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 19%" />
+<col style="width: 14%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p>A</p></td>
+<td><p>B</p></td>
+<td><p>C</p></td>
+<td><p>D</p></td>
+<td><p>E</p></td>
+<td><p>F</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>datestart</p></td>
+<td><p>dateend</p></td>
+<td><p>h0</p></td>
+<td><p>hend</p></td>
+<td><p>noise_fac</p></td>
+<td><p>notes</p></td>
+</tr>
+</tbody>
+</table>
+<p>The following rows contain the cases of interest. Make sure that the ALL the data in the excel sheet is formatted as
+string! The data has to be provided in the following syntax:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>date (string): format YYYYMMDD</p></li>
+<li><p>start (string): format HHMMSS</p></li>
+<li><p>datestart (string): format YYYYMMDDHHMMSS</p></li>
+<li><p>dateend (string): format YYYYMMDDHHMMSS</p></li>
+<li><p>end (string): format HHMMSS</p></li>
+<li><p>h0 (string): minimum height</p></li>
+<li><p>hend (string): maximum height</p></li>
+<li><p>MDF (string): name of the MDF used for this case</p></li>
+<li><p>noise_fac (string): noise factor</p></li>
+<li><p>notes (string): additional notes for the case (stored but not in use by the program)</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_loc</strong> (<em>string</em>) – path to the excel file (make sure the data_loc contains the suffix .xlsx)</p></li>
+<li><p><strong>sheet_nr</strong> (<em>integer</em>) – number of the desired excel sheet</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>case_list contains the information for all cases</p>
+<ul class="simple">
+<li><p>begin_dt (datetime object): start of the time interval</p></li>
+<li><p>end_dt (datetime object): end of the time interval</p></li>
+<li><p>plot_range (list): height interval</p></li>
+<li><p>MDF_name (string): name of MDF used for this case</p></li>
+<li><p>noisefac (string): number of standard deviations above mean noise level</p></li>
+<li><p>notes (string): additional notes for the user</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.interp_only_3rd_dim">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">interp_only_3rd_dim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">old</span></em>, <em class="sig-param"><span class="n">new</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#interp_only_3rd_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.interp_only_3rd_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to interpolate only the velocity (3rd) axis</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.put_in_container">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">put_in_container</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">data_container</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#put_in_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.put_in_container" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine will generate a new larda container, replacing var in the data_container given with data</p>
+<dl class="simple">
+<dt>Kwargs:</dt><dd><p>all keys used in larda containers, that is
+paraminfo (dict): information from params_[campaign].toml for the specific variable
+rg_unit: range unit
+mask: ndarray of same size as var, indicating masked values
+ts: time stamp in unix time
+var_lims: variable limits
+colormap: colormap to be used for plotting</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>larda data container</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>container (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.change_dir">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">change_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#change_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.change_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine changes to a folder or creates it (including subfolders) if it does not exist already.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> (<em>string</em>) – path of folder to switch into</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.make_dir">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">make_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">folder_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#make_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.make_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine changes to a folder or creates it (including subfolders) if it does not exist already.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>folder_path</strong> (<em>string</em>) – path of folder to switch into</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.print_traceback">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">print_traceback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#print_traceback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.print_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the traceback to an error to screen.
+:param - txt: error msg
+:type - txt: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.helpers.smooth">
+<code class="sig-prename descclassname">pyLARDA.helpers.</code><code class="sig-name descname">smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">box_pts</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">'constant'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/helpers.html#smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.helpers.smooth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smooth a one dimensional array using a rectangular window of box_pts points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y</strong> (<em>np.array</em>) – array to be smoothed</p></li>
+<li><p><strong>box_pts</strong> – number of points of the rectangular smoothing window</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>smoothed array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>y_smooth (np.arrax)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyLARDA.NcReader">
+<span id="pylarda-ncreader-module"></span><h2>pyLARDA.NcReader module<a class="headerlink" href="#module-pyLARDA.NcReader" title="Permalink to this headline">¶</a></h2>
+<p>Try to use netcdf4-python</p>
+<dl class="py function">
+<dt id="pyLARDA.NcReader.get_time_slicer">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">get_time_slicer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ts</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">f</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">time_interval</span><span class="p">:</span> <span class="n">List<span class="p">[</span>datetime.datetime<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/pyLARDA/NcReader.html#get_time_slicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.get_time_slicer" title="Permalink to this definition">¶</a></dt>
+<dd><p>get time slicer from the time_interval
+Following options are available</p>
+<ol class="arabic simple">
+<li><p>time_interval with [ts_begin, ts_end]</p></li>
+<li><p>only one timestamp is selected and the found right one would be beyond the ts range -&gt; argnearest instead searchsorted</p></li>
+<li><p>only one is timestamp</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ts</strong> – unix timestamps as array</p></li>
+<li><p><strong>f</strong> – filename</p></li>
+<li><p><strong>time_interval</strong> – time interval to slice for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>slicer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.reader">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">reader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in time height data</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.auxreader">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">auxreader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#auxreader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.auxreader" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in time height data</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.timeheightreader_rpgfmcw">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">timeheightreader_rpgfmcw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#timeheightreader_rpgfmcw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.timeheightreader_rpgfmcw" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in time height data
+special function for a special instrument ;)</p>
+<p>the issues are:</p>
+<ul class="simple">
+<li><p>range variable in different file</p></li>
+<li><p>stacking of single variables</p></li>
+</ul>
+<p>for now works only with 3 chirps and range variable only in level0</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.specreader_rpgfmcw">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">specreader_rpgfmcw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#specreader_rpgfmcw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.specreader_rpgfmcw" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in spectral data
+special function for a special instrument ;)</p>
+<p>the issues are:</p>
+<ul class="simple">
+<li><p>range variable in different file</p></li>
+<li><p>stacking of single variables</p></li>
+</ul>
+<p>for now works only with 3 chirps and range variable only in level0</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.specreader_rpgpy">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">specreader_rpgpy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#specreader_rpgpy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.specreader_rpgpy" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in spectral data</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.scanreader_mira">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">scanreader_mira</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#scanreader_mira"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.scanreader_mira" title="Permalink to this definition">¶</a></dt>
+<dd><p>reader for the scan files</p>
+<ul class="simple">
+<li><p>load full file regardless of selected time</p></li>
+<li><p>covers spec_timeheight and spec_time</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.interp_only_3rd_dim">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">interp_only_3rd_dim</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em>, <em class="sig-param"><span class="n">old</span></em>, <em class="sig-param"><span class="n">new</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#interp_only_3rd_dim"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.interp_only_3rd_dim" title="Permalink to this definition">¶</a></dt>
+<dd><p>function to interpolate only the velocity (3rd) axis</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.specreader_kazr">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">specreader_kazr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#specreader_kazr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.specreader_kazr" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in spectral data
+another special function for another special instrument ;)</p>
+<p>the issues are:</p>
+<ul class="simple">
+<li><p>variables time and range are merged and can be accessed by a locator mask</p></li>
+<li><p>noise is not saved and has to be computed from the spectra</p></li>
+<li><p>spectra are not in reflectivity but in 10*log10(mW)</p></li>
+<li><p>need to be converted using specZ = spec * h.z2lin(float(f.cal_constant[:-3])) * self.range[ir]**2</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.reader_pollyraw">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">reader_pollyraw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#reader_pollyraw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.reader_pollyraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading in the polly raw data into larda</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcReader.reader_wyoming_sounding">
+<code class="sig-prename descclassname">pyLARDA.NcReader.</code><code class="sig-name descname">reader_wyoming_sounding</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcReader.html#reader_wyoming_sounding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcReader.reader_wyoming_sounding" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a reader to read in Wyoming Upper Air soundings, saved locally as a txt file
+:param paraminfo: parameter information from toml file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>reader function</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyLARDA.NcWrite">
+<span id="pylarda-ncwrite-module"></span><h2>pyLARDA.NcWrite module<a class="headerlink" href="#module-pyLARDA.NcWrite" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pyLARDA.NcWrite.CalibratedSpectraXR">
+<em class="property">class </em><code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">CalibratedSpectraXR</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">_time</span></em>, <em class="sig-param"><span class="n">_range</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">_vel</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#CalibratedSpectraXR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.CalibratedSpectraXR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.export_spectra2nc">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">export_spectra2nc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">larda_git_path</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">system</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#export_spectra2nc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.export_spectra2nc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates an hourly NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param system: name of the radar system
+:type system: string
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.export_spectra_to_nc">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">export_spectra_to_nc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">system</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#export_spectra_to_nc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.export_spectra_to_nc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates an hourly NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param system: name of the radar system
+:type system: string
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.rpg_radar2nc">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">rpg_radar2nc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="n">larda_git_path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#rpg_radar2nc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.rpg_radar2nc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates a daily NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.rpg_radar2nc_eurec4a">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">rpg_radar2nc_eurec4a</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#rpg_radar2nc_eurec4a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.rpg_radar2nc_eurec4a" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates a daily NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+The variables and metadata are designed for the EUREC4A campaign.
+:param data: dictionary of larda containers
+:type data: dict
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.rpg_radar2nc_old">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">rpg_radar2nc_old</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#rpg_radar2nc_old"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.rpg_radar2nc_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates a daily NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.nc_add_variable">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">nc_add_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nc_ds</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#nc_add_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.nc_add_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function for adding a variable to a NetCDF file
+:param nc_ds: NetCDF data container with writing permission
+:type nc_ds: NetCDF4 object
+:param **var_name: variable name
+:type **var_name: string
+:param **type: variable type
+:type **type: numpy.int32, numpy.float32
+:param **dimension: dimensionality of the variable
+:type **dimension: tuple
+:param **val: values of the variable
+:type **val: numpy.array
+:param **long_name: more detailed description of the variable
+:type **long_name: string
+:param **unit: variable unit
+:type **unit: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.generate_weather_file_LIMRAD94">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">generate_weather_file_LIMRAD94</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#generate_weather_file_LIMRAD94"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.generate_weather_file_LIMRAD94" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates a daily NetCDF4 file with the weather station measurements from the RPG 94 GHz FMCW radar
+‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.NcWrite.generate_30s_averaged_Ze_files">
+<code class="sig-prename descclassname">pyLARDA.NcWrite.</code><code class="sig-name descname">generate_30s_averaged_Ze_files</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/NcWrite.html#generate_30s_averaged_Ze_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.NcWrite.generate_30s_averaged_Ze_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>This routine generates a daily NetCDF4 file for the RPG 94 GHz FMCW radar ‘LIMRAD94’.
+:param data: dictionary of larda containers
+:type data: dict
+:param path: path where the NetCDF file is stored
+:type path: string</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contributors.html" class="btn btn-neutral float-right" title="Contributors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="spectra.html" class="btn btn-neutral float-left" title="SpectraProcessing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020 pyLARDA-dev-team
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

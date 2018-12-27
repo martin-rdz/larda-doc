@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>peakTree extension &mdash; pyLARDA  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SpectraProcessing" href="spectra.html" />
+    <link rel="prev" title="Setup remote date source" href="setup_remote.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> pyLARDA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_use.html">How to use larda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datacontainer_and_transformation.html">Data container and transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide_config.html">Guide to config-files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup_remote.html">Setup remote date source</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">peakTree extension</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#peaktree-setup">peakTree Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load-and-plot">Load and plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#select-nodes-based-on-rule">select nodes based on rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#print-single-tree">print single tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#standalone">Standalone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyLARDA.peakTree">doc-strings</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spectra.html">SpectraProcessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_overview.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributors.html">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pyLARDA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>peakTree extension</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/peakTree.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="peaktree-extension">
+<h1>peakTree extension<a class="headerlink" href="#peaktree-extension" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="peaktree-setup">
+<h2>peakTree Setup<a class="headerlink" href="#peaktree-setup" title="Permalink to this headline">¶</a></h2>
+<p>Optionally, for faster reading (building the trees from the netcdf file) a cython extension can be used.
+This extension has to be complied:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build_ext</span> <span class="o">--</span><span class="n">inplace</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-and-plot">
+<h2>Load and plot<a class="headerlink" href="#load-and-plot" title="Permalink to this headline">¶</a></h2>
+<p>Loading the data works similar to the standard larda, only the third dimension of
+the data_container is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> of nodes instead a further array dimension.
+To plot these data into a time height crosssection, a parameter (reflectivity, velocity, width, …)
+and a node index have to be choosen.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">larda</span><span class="o">=</span><span class="n">pyLARDA</span><span class="o">.</span><span class="n">LARDA</span><span class="p">()</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;lacros_dacapo&#39;</span><span class="p">)</span>
+
+<span class="n">begin_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">end_dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">trees</span><span class="o">=</span><span class="n">larda</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;peakTree&quot;</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">begin_dt</span><span class="p">,</span> <span class="n">end_dt</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10000</span><span class="p">])</span>
+
+<span class="c1"># the tree_to_timeheight selects a 2d array from the [&#39;time&#39;, &#39;range&#39;, &#39;dict&#39;] data container</span>
+<span class="c1"># here just the total number of nodes is returned</span>
+<span class="n">no_nodes</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">tree_to_timeheight</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="s1">&#39;no_nodes&#39;</span><span class="p">)</span>
+<span class="n">no_nodes</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;no. nodes&#39;</span>
+<span class="n">no_nodes</span><span class="p">[</span><span class="s1">&#39;var_unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+<span class="c1"># plot_no_nodes provides a wrapper with special colormaps</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">plot_no_nodes</span><span class="p">(</span><span class="n">no_nodes</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_no_nodes.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">begin_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+
+<span class="c1"># plot Reflectivity of node 0</span>
+<span class="n">z_node0</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">tree_to_timeheight</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">sel_node</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">z_node0</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Reflectivity&#39;</span>
+<span class="n">z_node0</span><span class="p">[</span><span class="s1">&#39;var_unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dBZ&#39;</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">Transf</span><span class="o">.</span><span class="n">plot_timeheight</span><span class="p">(</span><span class="n">z_node0</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_Z_node0.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">begin_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="select-nodes-based-on-rule">
+<h2>select nodes based on rule<a class="headerlink" href="#select-nodes-based-on-rule" title="Permalink to this headline">¶</a></h2>
+<p>Special features can easily be detected by selection rules. An example is already provided with
+<a class="reference internal" href="#pyLARDA.peakTree.select_liquid_node" title="pyLARDA.peakTree.select_liquid_node"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyLARDA.peakTree.select_liquid_node()</span></code></a>. The found index is returned as a 2d array inside a data container.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># select the indices by a rule</span>
+<span class="c1"># here: node[&#39;z&#39;] &lt; -20 and abs(node[&#39;v&#39;]) &lt; 0.3</span>
+<span class="n">selected_index</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">select_liquid_node</span><span class="p">(</span><span class="n">trees</span><span class="p">)</span>
+
+<span class="c1"># plot the selected index</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">plot_sel_index</span><span class="p">(</span><span class="n">selected_index</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_ind_node_liq_wide.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">begin_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+
+<span class="c1"># extract a 2d array of the parameters</span>
+<span class="n">liquid_z</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">tree_to_timeheight</span><span class="p">(</span><span class="n">trees</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">sel_node</span><span class="o">=</span><span class="n">selected_index</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">])</span>
+<span class="n">liquid_z</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Reflectivity&#39;</span>
+<span class="n">liquid_z</span><span class="p">[</span><span class="s1">&#39;var_unit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;dBZ&#39;</span>
+
+<span class="c1"># and plot</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">Transf</span><span class="o">.</span><span class="n">plot_timeheight</span><span class="p">(</span><span class="n">liquid_z</span><span class="p">,</span> <span class="n">fig_size</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mf">5.7</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_Z_liq_wide.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">begin_dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M&quot;</span><span class="p">)),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="print-single-tree">
+<h2>print single tree<a class="headerlink" href="#print-single-tree" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">single_tree</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">Transformations</span><span class="o">.</span><span class="n">slice_container</span><span class="p">(</span>
+    <span class="n">trees</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">h</span><span class="o">.</span><span class="n">dt_to_ts</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2019</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">30</span><span class="p">))],</span>
+                <span class="s1">&#39;range&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2100</span><span class="p">]})</span>
+<span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">print_tree</span><span class="p">(</span><span class="n">single_tree</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="standalone">
+<h2>Standalone<a class="headerlink" href="#standalone" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pyLARDA.peakTree" title="pyLARDA.peakTree"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyLARDA.peakTree</span></code></a> module can be used without the main part of pyLARDA, when loading the file manually.
+For convenience one might add the <a class="reference internal" href="datacontainer_and_transformation.html#module-pyLARDA.Transformations" title="pyLARDA.Transformations"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyLARDA.Transformations</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyLARDA.peakTree</span>
+<span class="kn">import</span> <span class="nn">pyLARDA.helpers</span> <span class="k">as</span> <span class="nn">h</span>
+<span class="kn">import</span> <span class="nn">pyLARDA.Transformations</span> <span class="k">as</span> <span class="nn">Transf</span>
+
+<span class="c1"># configuration which is normally provided by the</span>
+<span class="c1"># connector/toml file</span>
+<span class="n">paraminfo</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time_variable&#39;</span><span class="p">:</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;range_variable&#39;</span><span class="p">:</span> <span class="s1">&#39;range&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;time_conversion&#39;</span><span class="p">:</span> <span class="s2">&quot;unix&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;range_conversion&#39;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;var_conversion&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;system&#39;</span><span class="p">:</span> <span class="s2">&quot;peaktree_peako&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;var_unit&#39;</span><span class="p">:</span> <span class="s2">&quot;tree&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;rg_unit&#39;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;paramkey&#39;</span><span class="p">:</span> <span class="s2">&quot;trees&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;colormap&#39;</span><span class="p">:</span> <span class="s2">&quot;gist&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;var_lims&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">99</span><span class="p">,</span> <span class="o">-</span><span class="mi">99</span><span class="p">],</span>
+            <span class="s1">&#39;altitude&#39;</span><span class="p">:</span> <span class="mi">181</span><span class="p">,</span>
+            <span class="s1">&#39;ncreader&#39;</span><span class="p">:</span> <span class="s1">&#39;peakTree&#39;</span><span class="p">}</span>
+
+<span class="n">rdr</span> <span class="o">=</span> <span class="n">pyLARDA</span><span class="o">.</span><span class="n">peakTree</span><span class="o">.</span><span class="n">peakTree_reader</span><span class="p">(</span><span class="n">paraminfo</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;../20140202_1600_kazrbaeccpeako_peakTree.nc4&quot;</span>
+
+<span class="n">trees</span> <span class="o">=</span> <span class="n">rdr</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="p">[</span><span class="n">begin_dt</span><span class="p">,</span> <span class="n">end_dt</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">3000</span><span class="p">])</span>
+<span class="c1"># trees is then the standard data_container of dim [&#39;time&#39;, &#39;range&#39;, &#39;dict&#39;]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-pyLARDA.peakTree">
+<span id="doc-strings"></span><h2>doc-strings<a class="headerlink" href="#module-pyLARDA.peakTree" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="pyLARDA.peakTree.build_tree_py">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">build_tree_py</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">ldr_avail</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#build_tree_py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.build_tree_py" title="Permalink to this definition">¶</a></dt>
+<dd><p>pure python/numpy version of the build tree function
+(slower than the compiled cython version)</p>
+<p>Indices in the stacked data array:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;v&#39;</span><span class="p">,</span>
+<span class="mi">3</span><span class="p">:</span> <span class="s1">&#39;width&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">:</span> <span class="s1">&#39;skew&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">:</span> <span class="s1">&#39;threshold&#39;</span><span class="p">,</span>
+<span class="mi">6</span><span class="p">:</span> <span class="s1">&#39;prominence&#39;</span><span class="p">,</span> <span class="mi">7</span><span class="p">:</span> <span class="s1">&#39;bound_l&#39;</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span> <span class="s1">&#39;bound_r&#39;</span><span class="p">,</span>
+<span class="n">optional</span>
+<span class="mi">9</span><span class="p">:</span> <span class="s1">&#39;LDR&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">:</span> <span class="s1">&#39;ldrmax&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.array_to_tree_py">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">array_to_tree_py</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">ldr_avail</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#array_to_tree_py"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.array_to_tree_py" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the array from the netcdf to var of data container
+pure python/numpy version
+(slower than the compiled cython version)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.peakTree_reader">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">peakTree_reader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">paraminfo</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#peakTree_reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.peakTree_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>build a function for reading the peakTree data (setup by connector)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.tree_to_timeheight">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">tree_to_timeheight</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em>, <em class="sig-param"><span class="n">param</span></em>, <em class="sig-param"><span class="n">sel_node</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#tree_to_timeheight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.tree_to_timeheight" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the tree data container to a normal time-height data container by extracting a node and a parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_cont</strong> (<em>dict</em>) – data container</p></li>
+<li><p><strong>param</strong> (<em>str</em>) – parameter to select, eg z, v</p></li>
+<li><p><strong>sel_node</strong> (<em>np.array</em><em> or </em><em>int</em><em>, </em><em>optional</em>) – integer or array of index to select</p></li>
+<li><p><strong>**kwargs</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data container of dimension <code class="docutils literal notranslate"><span class="pre">['time',</span> <span class="pre">'range']</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.select_rimed_node">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">select_rimed_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#select_rimed_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.select_rimed_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>select the rimed nodes from a peaktree data container
+The nodes are filtered by the rule:
+<code class="docutils literal notranslate"><span class="pre">abs(n['v'][0]-n['v'][-1])</span> <span class="pre">&gt;</span> <span class="pre">1.5</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_cont</strong> – peakTree data container</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data_container with selected indices in <code class="docutils literal notranslate"><span class="pre">var</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(time,</span> <span class="pre">range)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.select_liquid_node">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">select_liquid_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#select_liquid_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.select_liquid_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>select the liquid nodes from a peaktree data container</p>
+<p>The nodes are filtered by the rule:
+<code class="docutils literal notranslate"><span class="pre">n['z']</span> <span class="pre">&lt;</span> <span class="pre">-20</span> <span class="pre">and</span> <span class="pre">abs(n['v'])</span> <span class="pre">&lt;</span> <span class="pre">0.3</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_cont</strong> – peakTree data container</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Key word arguments:</dt><dd><p>Z_thresh, maximum Z of liquid peak (default is -20)
+LDR_thresh, maximum LDR of liquid peaks (LDR ignored if not given)</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>data_container with selected indices in <code class="docutils literal notranslate"><span class="pre">var</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(time,</span> <span class="pre">range)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.select_fastest_node">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">select_fastest_node</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#select_fastest_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.select_fastest_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>select the fastest-falling nodes from a peaktree data container</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_cont</strong> – peakTree data container</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>data_container with selected indices in <code class="docutils literal notranslate"><span class="pre">var</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(time,</span> <span class="pre">range)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.plot_no_nodes">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">plot_no_nodes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#plot_no_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.plot_no_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper for <a class="reference internal" href="datacontainer_and_transformation.html#pyLARDA.Transformations.plot_timeheight" title="pyLARDA.Transformations.plot_timeheight"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyLARDA.Transformations.plot_timeheight</span></code></a> to plot the no of nodes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – data container</p></li>
+<li><p><strong>**kwargs</strong> – piped to plot_timeheight function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">fig,</span> <span class="pre">ax</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.plot_sel_index">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">plot_sel_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#plot_sel_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.plot_sel_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrapper for <a class="reference internal" href="datacontainer_and_transformation.html#pyLARDA.Transformations.plot_timeheight" title="pyLARDA.Transformations.plot_timeheight"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyLARDA.Transformations.plot_timeheight</span></code></a> to plot the index of selected node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – data container</p></li>
+<li><p><strong>**kwargs</strong> – piped to plot_timeheight function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">fig,</span> <span class="pre">ax</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.to_text">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">to_text</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#to_text"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.to_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>represent the tree as a multiline string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="pyLARDA.peakTree.print_tree">
+<code class="sig-prename descclassname">pyLARDA.peakTree.</code><code class="sig-name descname">print_tree</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_cont</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyLARDA/peakTree.html#print_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyLARDA.peakTree.print_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>print the tree as a multi line string</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="spectra.html" class="btn btn-neutral float-right" title="SpectraProcessing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="setup_remote.html" class="btn btn-neutral float-left" title="Setup remote date source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020 pyLARDA-dev-team
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

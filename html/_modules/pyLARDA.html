@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pyLARDA &mdash; pyLARDA  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> pyLARDA
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../how_to_use.html">How to use larda</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datacontainer_and_transformation.html">Data container and transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide_config.html">Guide to config-files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup_remote.html">Setup remote date source</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../peakTree.html">peakTree extension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../spectra.html">SpectraProcessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api_overview.html">API documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributors.html">Contributors</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pyLARDA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>pyLARDA</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pyLARDA</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/python3</span>
+
+
+<span class="kn">import</span> <span class="nn">pyLARDA.Connector</span> <span class="k">as</span> <span class="nn">Connector</span>
+<span class="kn">import</span> <span class="nn">pyLARDA.ParameterInfo</span> <span class="k">as</span> <span class="nn">ParameterInfo</span>
+<span class="kn">import</span> <span class="nn">pyLARDA.spec2mom_limrad94</span> <span class="k">as</span> <span class="nn">spec2mom_limrad94</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">calendar</span><span class="o">,</span> <span class="nn">copy</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">toml</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">pyLARDA._meta</span> <span class="kn">import</span> <span class="n">__version__</span><span class="p">,</span> <span class="n">__author__</span>
+
+<span class="n">ROOT_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;HDF5_USE_FILE_LOCKING&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;FALSE&#39;</span>
+
+<div class="viewcode-block" id="LARDA"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA">[docs]</a><span class="k">class</span> <span class="nc">LARDA</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;init a new larda instance</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_source (str, optional): either ``&#39;local&#39;`` or ``&#39;remote&#39;``</span>
+<span class="sd">        uri: link to backend</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="n">uri</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camp</span> <span class="o">=</span> <span class="n">LARDA_campaign</span><span class="p">(</span><span class="n">ROOT_DIR</span> <span class="o">+</span> <span class="s2">&quot;/../../larda-cfg/&quot;</span><span class="p">,</span> <span class="s1">&#39;campaigns.toml&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">campaign_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">get_campaign_list</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;remote&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">=</span> <span class="s1">&#39;remote&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;/api/&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">campaign_list</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;campaign_list&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="LARDA.connect"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="s2">&quot;switch to decide whether connect to local or remote data source&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;local&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_local</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;remote&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_remote</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LARDA.connect_local"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.connect_local">[docs]</a>    <span class="k">def</span> <span class="nf">connect_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camp_name</span><span class="p">,</span> <span class="n">build_lists</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;built the connector list for the specified campaign (only valid systems are considered)</span>
+<span class="sd">        the connectors are instances of the Connector.Connector Class</span>
+
+<span class="sd">        NEW: one connector per system</span>
+<span class="sd">        then the params are parts of this system</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            camp_name (str): name of campaign as defined in ``campaigns.toml``</span>
+<span class="sd">            build_lists (Bool, optional): Flag to build the filelists or not (with many files this may take some time)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="o">=</span><span class="p">{}</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;campaign list &quot;</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">get_campaign_list</span><span class="p">()))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;camp_name set </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">camp_name</span><span class="p">))</span>
+
+        <span class="n">description_dir</span> <span class="o">=</span> <span class="n">ROOT_DIR</span> <span class="o">+</span> <span class="s2">&quot;/../../larda-description/&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">assign_campaign</span><span class="p">(</span><span class="n">camp_name</span><span class="p">)</span>
+        <span class="n">config_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">CONFIGURATION_FILE</span>
+        <span class="n">cinfo_hand_down</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">COORDINATES</span><span class="p">,</span>
+                           <span class="s1">&#39;altitude&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">ALTITUDE</span><span class="p">,</span>
+                           <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">LOCATION</span><span class="p">,</span>
+                           <span class="s1">&#39;mira_azi_zero&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;mira_azi_zero&#39;</span><span class="p">]}</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;config file </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+        
+        <span class="n">paraminformation</span> <span class="o">=</span> <span class="n">ParameterInfo</span><span class="o">.</span><span class="n">ParameterInfo</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">+</span> <span class="n">config_file</span><span class="p">,</span> 
+            <span class="n">cinfo_hand_down</span><span class="o">=</span><span class="n">cinfo_hand_down</span><span class="p">)</span>
+        <span class="n">starttime</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;camp.VALID_SYSTEMS </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">VALID_SYSTEMS</span><span class="p">))</span>
+        
+        <span class="c1">#if camp_name == &#39;LACROS_at_Leipzig&#39;:</span>
+        <span class="c1">#    build_lists = False</span>
+        <span class="c1"># build the filelists or load them from json</span>
+        <span class="k">for</span> <span class="n">system</span><span class="p">,</span> <span class="n">systeminfo</span> <span class="ow">in</span> <span class="n">paraminformation</span><span class="o">.</span><span class="n">iterate_systems</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;current parameter </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">systeminfo</span><span class="p">))</span>
+
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="n">Connector</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">systeminfo</span><span class="p">,</span>
+                                       <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">VALID_DATES</span><span class="p">,</span>
+                                       <span class="n">description_dir</span><span class="o">=</span><span class="n">description_dir</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">build_lists</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">build_filehandler</span><span class="p">()</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">save_filehandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;connectordump&#39;</span><span class="p">],</span> <span class="n">camp_name</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#load lists</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">load_filehandler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;connectordump&#39;</span><span class="p">],</span> <span class="n">camp_name</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">camp</span><span class="o">.</span><span class="n">VALID_SYSTEMS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">system</span><span class="p">]</span> <span class="o">=</span> <span class="n">conn</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> not in valid systems&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">system</span><span class="p">))</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Time for generating connectors </span><span class="si">{}</span><span class="s1"> s&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">starttime</span><span class="p">))</span>
+        <span class="c1">#print &quot;Availability array: &quot;, self.array_avail(2014, 2)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;systems </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parameters in stock: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">([(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">params_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">keys</span><span class="p">()]))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+        
+
+<div class="viewcode-block" id="LARDA.connect_remote"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.connect_remote">[docs]</a>    <span class="k">def</span> <span class="nf">connect_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camp_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;connect_remote </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">camp_name</span><span class="p">))</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">+</span> <span class="s1">&#39;/api/</span><span class="si">{}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">camp_name</span><span class="p">))</span>
+        <span class="c1">#print(resp.json())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;connectors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Connector</span><span class="o">.</span><span class="n">Connector_remote</span><span class="p">(</span><span class="n">camp_name</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uri</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="LARDA.read"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">,</span> <span class="o">*</span><span class="n">further_slices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            system (str): identifier for the system</span>
+<span class="sd">            parameter (str): choosen param</span>
+<span class="sd">            time_interval: ``[dt, dt]`` time interval, or [dt] one time</span>
+<span class="sd">            *further_slices: range, vel,.. ``[0, max]`` or [3000]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            the dictionary with data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">system</span><span class="p">]</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">time_interval</span><span class="p">,</span> <span class="o">*</span><span class="n">further_slices</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
+
+        <span class="k">return</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="LARDA.description"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.description">[docs]</a>    <span class="k">def</span> <span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Args:</span>
+<span class="sd">            system (str): identifier for the system</span>
+<span class="sd">            parameter (str): choosen param</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            the description tag as string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">descr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">system</span><span class="p">]</span><span class="o">.</span><span class="n">description</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">descr</span></div>
+
+
+<div class="viewcode-block" id="LARDA.print_params"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.print_params">[docs]</a>    <span class="k">def</span> <span class="nf">print_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;System, Param&quot;</span><span class="p">)</span>
+        <span class="p">[</span><span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">params_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="LARDA.days_with_data"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA.days_with_data">[docs]</a>    <span class="k">def</span> <span class="nf">days_with_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            the number of files per day for each system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">no_files</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">system</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">which_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">system</span><span class="p">]</span><span class="o">.</span><span class="n">filehandler</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">no_files</span><span class="p">[</span><span class="s1">&#39;system&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connectors</span><span class="p">[</span><span class="n">system</span><span class="p">]</span><span class="o">.</span><span class="n">files_per_day</span><span class="p">(</span><span class="n">which_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">no_files</span></div></div>
+
+
+<div class="viewcode-block" id="LARDA_campaign"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA_campaign">[docs]</a><span class="k">class</span> <span class="nc">LARDA_campaign</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; provides information about campaigns collected in LARDA&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_dir</span><span class="p">,</span> <span class="n">campaign_file</span><span class="p">):</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;campaign file at LARDA_campaign &#39;</span> <span class="o">+</span> <span class="n">campaign_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">campaigns</span> <span class="o">=</span> <span class="n">toml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_dir</span> <span class="o">+</span> <span class="n">campaign_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">campaign_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">campaigns</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span> <span class="o">=</span> <span class="n">config_dir</span>
+
+<div class="viewcode-block" id="LARDA_campaign.get_campaign_list"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA_campaign.get_campaign_list">[docs]</a>    <span class="k">def</span> <span class="nf">get_campaign_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; list of all campaign names stored in csv-file &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">campaign_list</span></div>
+        
+
+<div class="viewcode-block" id="LARDA_campaign.assign_campaign"><a class="viewcode-back" href="../api_overview.html#pyLARDA.LARDA_campaign.assign_campaign">[docs]</a>    <span class="k">def</span> <span class="nf">assign_campaign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;dedicate object to a specific campaign&quot;&quot;&quot;</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">campaigns</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;info dict@assing campaign </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ALTITUDE</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VALID_SYSTEMS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s1">&#39;systems&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">VALID_DATES</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;duration&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">COORDINATES</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CLOUDNET_STATIONNAME</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;cloudnet_stationname&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CONFIGURATION_FILE</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;param_config_file&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOCATION</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info_dict</span><span class="p">[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VALID_DATES</span><span class="p">):</span>
+            <span class="c1">#begin = datetime.datetime.strptime(val[0], &quot;%Y%m%d&quot;)</span>
+            <span class="k">if</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;today&#39;</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1">#    end = datetime.datetime.strptime(val[1], &quot;%Y%m%d&quot;)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">VALID_DATES</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020 pyLARDA-dev-team
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
